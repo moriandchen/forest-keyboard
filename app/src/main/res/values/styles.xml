@@ -1,0 +1,5 @@
+<resources>
+<style name="Theme.ForestKeyboard" parent="android:style/Theme.Material.Light.NoActionBar">
+    <item name="android:fontFamily">sans</item><item name="android:colorAccent">#556B5D</item><item name="android:navigationBarColor">#F2F2F2</item>
+</style>
+</resources>
