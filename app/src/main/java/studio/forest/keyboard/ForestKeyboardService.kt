@@ -42,7 +42,33 @@ class ForestKeyboardService : InputMethodService() {
         "sen lin" to listOf("森林"),
         "zhong" to listOf("中","種","重"),
         "wen" to listOf("文","問","聞"),
-        "zhong wen" to listOf("中文")
+        "zhong wen" to listOf("中文"),
+        "jin tian" to listOf("今天"),
+        "ming tian" to listOf("明天"),
+        "xian zai" to listOf("現在"),
+        "wo men" to listOf("我們"),
+        "ni men" to listOf("你們"),
+        "ke yi" to listOf("可以"),
+        "xi huan" to listOf("喜歡"),
+        "hen" to listOf("很","狠","恨"),
+        "zhen" to listOf("真","鎮","珍"),
+        "zhen de" to listOf("真的"),
+        "xiang" to listOf("想","像","向","香"),
+        "yao" to listOf("要","咬","藥"),
+        "qu" to listOf("去","區","取"),
+        "kan" to listOf("看","砍","刊"),
+        "da" to listOf("大","打","答"),
+        "zi" to listOf("字","子","自"),
+        "jian" to listOf("見","件","間"),
+        "jing" to listOf("精","經","京"),
+        "shen" to listOf("神","身","深"),
+        "ling" to listOf("領","零","靈"),
+        "xiu" to listOf("袖","秀","修"),
+        "jing shen" to listOf("精神"),
+        "ling xiu" to listOf("領袖"),
+        "jing shen ling xiu" to listOf("精神領袖"),
+        "sen lin" to listOf("森林"),
+        "jian pan" to listOf("鍵盤")
     )
 
     override fun onCreateInputView(): View {
@@ -125,14 +151,37 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun candidateList(raw:String):List<String>{
-        val direct=pinyin[raw]
-        if(direct!=null)return direct
-        val parts=raw.split(" ")
-        if(parts.size>1){
-            val last=pinyin[parts.last()] ?: emptyList()
-            if(last.isNotEmpty())return last
+        pinyin[raw]?.let { return it }
+
+        val segmentations = segment(raw)
+        val phrases = mutableListOf<String>()
+        for(parts in segmentations.take(12)){
+            val spaced=parts.joinToString(" ")
+            pinyin[spaced]?.let { phrases.addAll(it) }
+
+            val perSyllable=parts.map { pinyin[it]?.firstOrNull() }
+            if(perSyllable.all { it != null }) phrases += perSyllable.filterNotNull().joinToString("")
         }
-        return listOf(raw)
+        return phrases.distinct().take(12).ifEmpty { listOf(raw) }
+    }
+
+    private fun segment(raw:String):List<List<String>>{
+        if(raw.isBlank()) return emptyList()
+        val syllables=pinyin.keys.filter { !it.contains(" ") }.sortedByDescending { it.length }
+        val memo=mutableMapOf<Int,List<List<String>>>()
+        fun walk(pos:Int):List<List<String>>{
+            if(pos==raw.length)return listOf(emptyList())
+            memo[pos]?.let{return it}
+            val out=mutableListOf<List<String>>()
+            for(s in syllables){
+                if(raw.startsWith(s,pos)){
+                    for(tail in walk(pos+s.length)) out += listOf(s)+tail
+                }
+            }
+            memo[pos]=out.take(24)
+            return memo[pos]!!
+        }
+        return walk(0)
     }
 
     private fun choose(word:String){
