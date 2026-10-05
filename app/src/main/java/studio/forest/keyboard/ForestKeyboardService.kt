@@ -67,7 +67,11 @@ class ForestKeyboardService : InputMethodService() {
     private fun render(){ root.removeAllViews(); if(numeric) renderNumeric() else renderLetters() }
 
     private fun renderCandidates(){
-        val bar=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL; gravity=Gravity.CENTER_VERTICAL }
+        val bar=LinearLayout(this).apply {
+            orientation=LinearLayout.HORIZONTAL
+            gravity=Gravity.CENTER_VERTICAL
+            setBackgroundColor(Color.rgb(250,250,251))
+        }
         val mode=Button(this).apply {
             text=if(english)"ABC" else "拼"
             textSize=14f; isAllCaps=false; minHeight=0; minimumHeight=0
@@ -80,7 +84,10 @@ class ForestKeyboardService : InputMethodService() {
         val words=if(composing.isBlank()) listOf("繁","簡","「」","常用") else candidateList(composing)
         words.forEach { word ->
             candidates.addView(TextView(this).apply {
-                text=word; textSize=18f; gravity=Gravity.CENTER; setPadding(18,0,18,0)
+                text=word; textSize=19f; gravity=Gravity.CENTER; setPadding(20,0,20,0)
+                setTextColor(Color.rgb(38,38,42))
+                setBackgroundColor(Color.rgb(250,250,251))
+                setSingleLine(true)
                 setOnClickListener {
                     when {
                         composing.isNotBlank() -> choose(word)
