@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.content.Context
 import kotlin.math.abs
 
 class ForestKeyboardService : InputMethodService() {
@@ -20,6 +21,7 @@ class ForestKeyboardService : InputMethodService() {
     private var composing=""
     private var spaceStartX=0f
     private var lastCursorStep=0
+    private val prefs by lazy { getSharedPreferences("forest_learning", Context.MODE_PRIVATE) }
 
     private val pinyin = mapOf(
         "wo" to listOf("我","握","窩","喔"),
@@ -151,7 +153,7 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun candidateList(raw:String):List<String>{
-        pinyin[raw]?.let { return it }
+        pinyin[raw]?.let { return rank(raw,it) }
 
         val segmentations = segment(raw)
         val phrases = mutableListOf<String>()
@@ -162,7 +164,7 @@ class ForestKeyboardService : InputMethodService() {
             val perSyllable=parts.map { pinyin[it]?.firstOrNull() }
             if(perSyllable.all { it != null }) phrases += perSyllable.filterNotNull().joinToString("")
         }
-        return phrases.distinct().take(12).ifEmpty { listOf(raw) }
+        return rank(raw, phrases.distinct()).take(12).ifEmpty { listOf(raw) }
     }
 
     private fun segment(raw:String):List<List<String>>{
@@ -185,10 +187,26 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun choose(word:String){
+        val raw=composing
+        learn(raw,word)
         currentInputConnection.finishComposingText()
         currentInputConnection.commitText(word,1)
         composing=""
         render()
+    }
+
+    private fun learn(raw:String, word:String){
+        if(raw.isBlank() || word==raw)return
+        val key="freq|" + raw + "|" + word
+        prefs.edit().putInt(key,prefs.getInt(key,0)+1).apply()
+    }
+
+    private fun rank(raw:String, words:List<String>):List<String>{
+        return words.withIndex()
+            .sortedWith(compareByDescending<IndexedValue<String>> { item ->
+                prefs.getInt("freq|" + raw + "|" + item.value,0)
+            }.thenBy { item -> item.index })
+            .map { item -> item.value }
     }
 
     private fun flushRaw(){
