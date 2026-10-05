@@ -1,6 +1,7 @@
 package studio.forest.keyboard
 
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.inputmethodservice.InputMethodService
 import android.view.Gravity
 import android.view.KeyEvent
@@ -76,15 +77,22 @@ class ForestKeyboardService : InputMethodService() {
     override fun onCreateInputView(): View {
         root=LinearLayout(this).apply {
             orientation=LinearLayout.VERTICAL
-            setPadding(5,5,5,5)
-            setBackgroundColor(Color.rgb(242,242,244))
+            setPadding(5,4,5,5)
+            setBackgroundColor(Color.rgb(225,227,232))
         }
         render(); return root
     }
 
     private fun key(label:String, weight:Float=1f, action:(()->Unit)?=null)=Button(this).apply {
-        text=label; textSize=17f; isAllCaps=false; minHeight=0; minimumHeight=0; setPadding(0,0,0,0)
-        layoutParams=LinearLayout.LayoutParams(0,50.dp,weight).apply { setMargins(2,2,2,2) }
+        text=label; textSize=18f; isAllCaps=false; minHeight=0; minimumHeight=0; setPadding(0,0,0,0)
+        setTextColor(Color.rgb(25,25,28))
+        background=GradientDrawable().apply {
+            cornerRadius=8.dp.toFloat()
+            setColor(if(label in listOf("⇧","⌫","123","☺","↵")) Color.rgb(214,216,221) else Color.WHITE)
+        }
+        stateListAnimator=null
+        elevation=0f
+        layoutParams=LinearLayout.LayoutParams(0,52.dp,weight).apply { setMargins(3,4,3,4) }
         setOnClickListener { action?.invoke() ?: commit(label) }
     }
 
