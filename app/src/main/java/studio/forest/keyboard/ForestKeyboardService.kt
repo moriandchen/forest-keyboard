@@ -133,7 +133,16 @@ class ForestKeyboardService : InputMethodService() {
                 }
             })
         }
-        scroll.addView(candidates); bar.addView(scroll); root.addView(bar)
+        scroll.addView(candidates); bar.addView(scroll)
+        val expand=TextView(this).apply {
+            text="⌄"; textSize=24f; gravity=Gravity.CENTER
+            setTextColor(Color.rgb(35,35,38))
+            layoutParams=LinearLayout.LayoutParams(48.dp,46.dp)
+            setOnClickListener {
+                if(composing.isNotBlank()) scroll.fullScroll(View.FOCUS_RIGHT)
+            }
+        }
+        bar.addView(expand); root.addView(bar)
     }
 
     private fun renderLetters(){
