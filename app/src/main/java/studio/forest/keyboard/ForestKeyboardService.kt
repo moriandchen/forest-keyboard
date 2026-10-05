@@ -102,17 +102,18 @@ class ForestKeyboardService : InputMethodService() {
         }
         val mode=Button(this).apply {
             text=if(english)"ABC" else "拼"
-            textSize=14f; isAllCaps=false; minHeight=0; minimumHeight=0
-            layoutParams=LinearLayout.LayoutParams(58.dp,44.dp)
+            textSize=13f; isAllCaps=false; minHeight=0; minimumHeight=0
+            setTextColor(Color.rgb(70,70,74)); setSingleLine(true)
+            layoutParams=LinearLayout.LayoutParams(64.dp,46.dp)
             setOnClickListener { flushRaw(); english=!english; render() }
         }
         bar.addView(mode)
-        val scroll=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; layoutParams=LinearLayout.LayoutParams(0,44.dp,1f) }
+        val scroll=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; layoutParams=LinearLayout.LayoutParams(0,46.dp,1f) }
         val candidates=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
         val words=if(composing.isBlank()) listOf("繁","簡","「」","常用") else candidateList(composing)
         words.forEach { word ->
             candidates.addView(TextView(this).apply {
-                text=word; textSize=19f; gravity=Gravity.CENTER; setPadding(20,0,20,0)
+                text=word; textSize=20f; gravity=Gravity.CENTER; setPadding(18,0,18,0)
                 setTextColor(Color.rgb(38,38,42))
                 setBackgroundColor(Color.rgb(250,250,251))
                 setSingleLine(true)
@@ -129,19 +130,25 @@ class ForestKeyboardService : InputMethodService() {
 
     private fun renderLetters(){
         renderCandidates()
-        listOf("qwertyuiop","asdfghjkl","zxcvbnm").forEach { chars ->
-            root.addView(row(*chars.map { c ->
-                val label=if(shift)c.uppercase() else c.toString()
-                key(label){ letter(label) }
-            }.toTypedArray()))
-        }
+        root.addView(row(*"qwertyuiop".map { c ->
+            val label=if(shift)c.uppercase() else c.toString(); key(label){letter(label)}
+        }.toTypedArray()))
+        root.addView(LinearLayout(this).apply {
+            orientation=LinearLayout.HORIZONTAL
+            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(14.dp,1))
+            "asdfghjkl".forEach { c -> val label=if(shift)c.uppercase() else c.toString(); addView(key(label){letter(label)}) }
+            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(14.dp,1))
+        })
         root.addView(row(
-            key("123",1.2f){flushRaw();numeric=true;render()},
-            key("⇧"){shift=!shift;render()},
-            key("，"){punct("，")}, key("。"){punct("。")},
-            key("空格",3f).also(::setupSpace),
-            key("⌫",1.2f){backspace()},
-            key("↵",1.2f){flushRaw();commit("\n")}
+            key("⇧",1.15f){shift=!shift;render()},
+            *"zxcvbnm".map { c -> val label=if(shift)c.uppercase() else c.toString(); key(label){letter(label)} }.toTypedArray(),
+            key("⌫",1.15f){backspace()}
+        ))
+        root.addView(row(
+            key("123",1.25f){flushRaw();numeric=true;render()},
+            key("☺",1.05f){flushRaw();commit("☺")},
+            key(if(english)"space" else "空格",4.2f).also(::setupSpace),
+            key("↵",1.55f){flushRaw();commit("\n")}
         ))
     }
 
