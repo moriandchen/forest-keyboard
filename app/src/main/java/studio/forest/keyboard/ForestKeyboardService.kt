@@ -25,6 +25,22 @@ class ForestKeyboardService : InputMethodService() {
     private val prefs by lazy { getSharedPreferences("forest_learning", Context.MODE_PRIVATE) }
 
     private val pinyin by lazy { loadDictionary() }
+    // Built once after the dictionary is loaded. Previously segment() rebuilt and
+    // sorted this list on every key press, which became expensive with V0.8.
+    private val syllables by lazy {
+        pinyin.keys.asSequence()
+            .filter { !it.contains(" ") }
+            .sortedByDescending { it.length }
+            .toList()
+    }
+    // Composing strings repeat heavily while typing (w -> wo -> ...). Cache both
+    // segmentation and final candidates for the current app session.
+    private val segmentationCache = object : LinkedHashMap<String,List<List<String>>>(128,0.75f,true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String,List<List<String>>>?) = size > 256
+    }
+    private val candidateCache = object : LinkedHashMap<String,List<String>>(128,0.75f,true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String,List<String>>?) = size > 256
+    }
 
     private fun loadDictionary():Map<String,List<String>>{
         val out=linkedMapOf<String,MutableList<String>>()
@@ -145,23 +161,25 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun candidateList(raw:String):List<String>{
-        pinyin[raw]?.let { return rank(raw,it) }
-
-        val segmentations = segment(raw)
-        val phrases = mutableListOf<String>()
-        for(parts in segmentations.take(12)){
-            val spaced=parts.joinToString(" ")
-            pinyin[spaced]?.let { phrases.addAll(it) }
-
-            val perSyllable=parts.map { pinyin[it]?.firstOrNull() }
-            if(perSyllable.all { it != null }) phrases += perSyllable.filterNotNull().joinToString("")
+        // Keep ranking dynamic so personal learning takes effect immediately.
+        candidateCache[raw]?.let { return rank(raw,it) }
+        val base = pinyin[raw] ?: run {
+            val phrases = mutableListOf<String>()
+            for(parts in segment(raw).take(12)){
+                val spaced=parts.joinToString(" ")
+                pinyin[spaced]?.let { phrases.addAll(it) }
+                val perSyllable=parts.map { pinyin[it]?.firstOrNull() }
+                if(perSyllable.all { it != null }) phrases += perSyllable.filterNotNull().joinToString("")
+            }
+            phrases.distinct().take(12).ifEmpty { listOf(raw) }
         }
-        return rank(raw, phrases.distinct()).take(12).ifEmpty { listOf(raw) }
+        candidateCache[raw]=base
+        return rank(raw,base)
     }
 
     private fun segment(raw:String):List<List<String>>{
         if(raw.isBlank()) return emptyList()
-        val syllables=pinyin.keys.filter { !it.contains(" ") }.sortedByDescending { it.length }
+        segmentationCache[raw]?.let { return it }
         val memo=mutableMapOf<Int,List<List<String>>>()
         fun walk(pos:Int):List<List<String>>{
             if(pos==raw.length)return listOf(emptyList())
@@ -169,13 +187,17 @@ class ForestKeyboardService : InputMethodService() {
             val out=mutableListOf<List<String>>()
             for(s in syllables){
                 if(raw.startsWith(s,pos)){
-                    for(tail in walk(pos+s.length)) out += listOf(s)+tail
+                    for(tail in walk(pos+s.length)) {
+                        out += listOf(s)+tail
+                        if(out.size>=24) break
+                    }
                 }
+                if(out.size>=24) break
             }
-            memo[pos]=out.take(24)
-            return memo[pos]!!
+            memo[pos]=out
+            return out
         }
-        return walk(0)
+        return walk(0).also { segmentationCache[raw]=it }
     }
 
     private fun choose(word:String){
