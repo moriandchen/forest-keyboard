@@ -94,12 +94,12 @@ class ForestKeyboardService : InputMethodService() {
         text=label; textSize=18f; isAllCaps=false; minHeight=0; minimumHeight=0; setPadding(0,0,0,0)
         setTextColor(Color.rgb(25,25,28))
         background=GradientDrawable().apply {
-            cornerRadius=8.dp.toFloat()
+            cornerRadius=9.dp.toFloat()
             setColor(if(label in listOf("⇧","⌫","123","☺","↵")) Color.rgb(214,216,221) else Color.WHITE)
         }
         stateListAnimator=null
         elevation=0f
-        layoutParams=LinearLayout.LayoutParams(0,52.dp,weight).apply { setMargins(3,4,3,4) }
+        layoutParams=LinearLayout.LayoutParams(0,49.dp,weight).apply { setMargins(2,3,2,3) }
         setOnClickListener { action?.invoke() ?: commit(label) }
     }
 
@@ -132,16 +132,16 @@ class ForestKeyboardService : InputMethodService() {
             text=if(english)"ABC" else "拼"
             textSize=13f; isAllCaps=false; minHeight=0; minimumHeight=0
             setTextColor(Color.rgb(70,70,74)); setSingleLine(true)
-            layoutParams=LinearLayout.LayoutParams(64.dp,46.dp)
+            layoutParams=LinearLayout.LayoutParams(52.dp,43.dp)
             setOnClickListener { flushRaw(); english=!english; render() }
         }
         bar.addView(mode)
-        val scroll=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; layoutParams=LinearLayout.LayoutParams(0,46.dp,1f) }
+        val scroll=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; layoutParams=LinearLayout.LayoutParams(0,43.dp,1f) }
         val candidates=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
         val words=if(composing.isBlank()) listOf("繁","簡","「」","常用") else candidateList(composing)
         words.forEach { word ->
             candidates.addView(TextView(this).apply {
-                text=word; textSize=20f; gravity=Gravity.CENTER; setPadding(18,0,18,0)
+                text=word; textSize=20f; gravity=Gravity.CENTER; setPadding(15,0,15,0)
                 setTextColor(Color.rgb(38,38,42))
                 setBackgroundColor(Color.rgb(250,250,251))
                 setSingleLine(true)
@@ -157,7 +157,7 @@ class ForestKeyboardService : InputMethodService() {
         val expand=TextView(this).apply {
             text=if(candidatesExpanded)"⌃" else "⌄"; textSize=24f; gravity=Gravity.CENTER
             setTextColor(Color.rgb(35,35,38))
-            layoutParams=LinearLayout.LayoutParams(48.dp,46.dp)
+            layoutParams=LinearLayout.LayoutParams(42.dp,43.dp)
             setOnClickListener {
                 if(composing.isNotBlank()){ candidatesExpanded=!candidatesExpanded; refreshCandidates() }
             }
@@ -198,20 +198,20 @@ class ForestKeyboardService : InputMethodService() {
         }.toTypedArray()))
         root.addView(LinearLayout(this).apply {
             orientation=LinearLayout.HORIZONTAL
-            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(14.dp,1))
+            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(18.dp,1))
             "asdfghjkl".forEach { c -> val label=if(shift)c.uppercase() else c.toString(); addView(key(label){letter(label)}) }
             addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(14.dp,1))
         })
         root.addView(row(
-            key("⇧",1.15f){shift=!shift;render()},
+            key("⇧",1.35f){shift=!shift;render()},
             *"zxcvbnm".map { c -> val label=if(shift)c.uppercase() else c.toString(); key(label){letter(label)} }.toTypedArray(),
-            key("⌫",1.15f){backspace()}
+            key("⌫",1.35f){backspace()}
         ))
         root.addView(row(
-            key("123",1.25f){flushRaw();numeric=true;render()},
-            key("☺",1.05f){flushRaw();commit("☺")},
-            key(if(english)"space" else "空格",4.2f).also(::setupSpace),
-            key("↵",1.55f){flushRaw();commit("\n")}
+            key("123",1.15f){flushRaw();numeric=true;render()},
+            key("☺",0.95f){flushRaw();commit("☺")},
+            key(if(english)"English" else "拼音",4.65f).also(::setupSpace),
+            key("↵",1.35f){flushRaw();commit("\n")}
         ))
     }
 
