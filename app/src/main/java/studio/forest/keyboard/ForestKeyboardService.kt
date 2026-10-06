@@ -25,6 +25,12 @@ import kotlin.math.abs
 class ForestKeyboardService : InputMethodService() {
     private lateinit var root: LinearLayout
     private lateinit var candidateHost: LinearLayout
+    private lateinit var candidateRow: LinearLayout
+    private lateinit var candidateScroll: HorizontalScrollView
+    private lateinit var modeButton: Button
+    private lateinit var expandButton: TextView
+    private var renderedRaw=""
+    private data class CandidateTarget(val raw:String, val word:String)
     private var numeric=false
     private var english=false
     private var shift=false
@@ -87,10 +93,10 @@ class ForestKeyboardService : InputMethodService() {
             val maxPrefix=compact.length
             for(len in 1..maxPrefix){
                 val bucket=out.getOrPut(compact.substring(0,len)){ mutableListOf() }
-                if(bucket.size<24){
-                    for(word in words.take(4)){
+                if(bucket.size<96){
+                    for(word in words){
                         if(word !in bucket) bucket.add(word)
-                        if(bucket.size>=24) break
+                        if(bucket.size>=96) break
                     }
                 }
             }
@@ -164,6 +170,7 @@ class ForestKeyboardService : InputMethodService() {
             setBackgroundColor(Color.rgb(225,227,232))
         }
         candidateHost=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
+        renderedRaw=""
         render(); return root
     }
 
@@ -215,13 +222,11 @@ class ForestKeyboardService : InputMethodService() {
             displayedRaw=raw
             displayedWords=words
             displayedConsumption=consumption
-            candidateHost.alpha=1f
             if(chooseOnReady && words.isNotEmpty()) {
                 chooseOnReady=false
                 choose(words.first())
                 return
             }
-            candidateHost.removeAllViews()
             renderCandidates(candidateHost,raw,words,all)
         }
         if(raw.isBlank()) {
@@ -230,7 +235,6 @@ class ForestKeyboardService : InputMethodService() {
         }
         // Old candidates may remain visible while loading, but cannot commit for
         // a different composing string. Coalesce rapid keys into one query/frame.
-        candidateHost.alpha=0.55f
         scheduledRefresh=Runnable {
             scheduledRefresh=null
             candidateJob=candidateWorker.submit {
@@ -267,49 +271,75 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun renderCandidates(host:LinearLayout, raw:String, words:List<String>, all:List<String>){
-        val bar=LinearLayout(this).apply {
-            orientation=LinearLayout.HORIZONTAL
-            gravity=Gravity.CENTER_VERTICAL
-            setBackgroundColor(Color.rgb(250,250,251))
+        if(host.childCount==0) {
+            val bar=LinearLayout(this).apply {
+                orientation=LinearLayout.HORIZONTAL
+                gravity=Gravity.CENTER_VERTICAL
+                setBackgroundColor(Color.rgb(250,250,251))
+            }
+            modeButton=Button(this).apply {
+                textSize=13f; isAllCaps=false; minHeight=0; minimumHeight=0
+                setTextColor(Color.rgb(70,70,74)); setSingleLine(true)
+                layoutParams=LinearLayout.LayoutParams(52.dp,43.dp)
+                setOnClickListener { flushRaw(); english=!english; render() }
+            }
+            bar.addView(modeButton)
+            candidateScroll=HorizontalScrollView(this).apply {
+                isHorizontalScrollBarEnabled=false
+                layoutParams=LinearLayout.LayoutParams(0,43.dp,1f)
+            }
+            candidateRow=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
+            candidateScroll.addView(candidateRow); bar.addView(candidateScroll)
+            expandButton=TextView(this).apply {
+                textSize=24f; gravity=Gravity.CENTER
+                setTextColor(Color.rgb(35,35,38))
+                layoutParams=LinearLayout.LayoutParams(42.dp,43.dp)
+                setOnClickListener {
+                    if(composing.isNotBlank()) {
+                        candidatesExpanded=!candidatesExpanded
+                        if(!candidatesExpanded) collapseCandidatePanel()
+                        refreshCandidates()
+                    }
+                }
+            }
+            bar.addView(expandButton); host.addView(bar)
         }
-        val mode=Button(this).apply {
-            text=if(english)"ABC" else "拼"
-            textSize=13f; isAllCaps=false; minHeight=0; minimumHeight=0
-            setTextColor(Color.rgb(70,70,74)); setSingleLine(true)
-            layoutParams=LinearLayout.LayoutParams(52.dp,43.dp)
-            setOnClickListener { flushRaw(); english=!english; render() }
-        }
-        bar.addView(mode)
-        val scroll=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; layoutParams=LinearLayout.LayoutParams(0,43.dp,1f) }
-        val candidates=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
-        words.forEach { word ->
-            candidates.addView(TextView(this).apply {
-                text=word; textSize=20f; gravity=Gravity.CENTER; setPadding(18.dp,0,18.dp,0)
+        // Keep the bar, scroll container and candidate targets mounted. Only
+        // rebind labels; this avoids allocation/layout churn on every key.
+        modeButton.text=if(english) "ABC" else "拼"
+        expandButton.text=if(candidatesExpanded) "⌃" else "⌄"
+        while(candidateRow.childCount<words.size) {
+            candidateRow.addView(TextView(this).apply {
+                textSize=20f; gravity=Gravity.CENTER; setPadding(18.dp,0,18.dp,0)
                 minimumWidth=56.dp
                 layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,43.dp)
-                setTextColor(Color.rgb(38,38,42))
-                setBackgroundColor(Color.rgb(250,250,251))
+                setTextColor(Color.rgb(38,38,42)); setBackgroundColor(Color.rgb(250,250,251))
                 setSingleLine(true)
                 trackCandidateTouch(this)
                 setOnClickListener {
-                    if(raw!=composing) return@setOnClickListener
+                    val target=tag as? CandidateTarget ?: return@setOnClickListener
+                    if(target.raw!=composing) return@setOnClickListener
                     when {
-                        raw.isNotBlank() -> choose(word)
-                        word=="「」" -> { commit("「」"); send(KeyEvent.KEYCODE_DPAD_LEFT) }
+                        target.raw.isNotBlank() -> choose(target.word)
+                        target.word=="「」" -> { commit("「」"); send(KeyEvent.KEYCODE_DPAD_LEFT) }
                     }
                 }
             })
         }
-        scroll.addView(candidates); bar.addView(scroll)
-        val expand=TextView(this).apply {
-            text=if(candidatesExpanded)"⌃" else "⌄"; textSize=24f; gravity=Gravity.CENTER
-            setTextColor(Color.rgb(35,35,38))
-            layoutParams=LinearLayout.LayoutParams(42.dp,43.dp)
-            setOnClickListener {
-                if(composing.isNotBlank()){ candidatesExpanded=!candidatesExpanded; refreshCandidates() }
+        for(i in 0 until candidateRow.childCount) {
+            val view=candidateRow.getChildAt(i) as TextView
+            if(i<words.size) {
+                view.visibility=View.VISIBLE
+                view.text=words[i]
+                view.tag=CandidateTarget(raw,words[i])
+            } else {
+                view.visibility=View.GONE
+                view.tag=null
             }
         }
-        bar.addView(expand); host.addView(bar)
+        if(renderedRaw!=raw) candidateScroll.scrollTo(0,0)
+        renderedRaw=raw
+        while(host.childCount>1) host.removeViewAt(1)
 
         if(candidatesExpanded && composing.isNotBlank()){
             val grid=GridLayout(this).apply {
@@ -345,6 +375,14 @@ class ForestKeyboardService : InputMethodService() {
         }
     }
 
+    private fun collapseCandidatePanel() {
+        candidatesExpanded=false
+        if(::candidateHost.isInitialized) {
+            while(candidateHost.childCount>1) candidateHost.removeViewAt(1)
+        }
+        if(::expandButton.isInitialized) expandButton.text="⌄"
+    }
+
     private fun renderLetterKeys(){
         // Persistent punctuation row: available even while composing.
         val marks=if(english) listOf(",",".","?","!") else listOf("，","。","？","！")
@@ -378,6 +416,7 @@ class ForestKeyboardService : InputMethodService() {
 
     private fun letter(s:String){
         if(english){ commit(s); return }
+        collapseCandidatePanel()
         composing += s.lowercase()
         currentInputConnection.setComposingText(composing,1)
         refreshCandidates()
@@ -387,18 +426,13 @@ class ForestKeyboardService : InputMethodService() {
         // Keep ranking dynamic so personal learning takes effect immediately.
         candidateCache[raw]?.let { return rank(raw,it) }
         val base = pinyin[raw] ?: run {
+            // Typing uses dictionary/index lookups only. Synthetic combinations
+            // and recursive segmentation are deferred until explicit expansion.
             val exact=compactDictionary[raw].orEmpty()
-            val phrases = mutableListOf<String>()
-            for(parts in segment(raw).take(12)){
-                pinyin[parts.joinToString(" ")]?.let { phrases.addAll(it) }
-                val perSyllable=parts.map { pinyin[it]?.firstOrNull() }
-                if(perSyllable.all { it != null }) phrases += perSyllable.filterNotNull().joinToString("")
-            }
-            // Keep known whole words first, then expose the completed leading
-            // syllable so the user can resolve the rest one character at a time.
+            val predicted=prefixCandidates(raw)
             val leading=leadingCandidates(raw)
-            (exact + leading.take(8) + phrases + prefixCandidates(raw))
-                .distinct().take(16).ifEmpty { listOf(raw) }
+            (exact + predicted.take(6) + leading.take(8) + predicted)
+                .distinct().take(24).ifEmpty { listOf(raw) }
         }
         if(Thread.currentThread().isInterrupted) throw InterruptedException()
         candidateCache[raw]=base
@@ -445,6 +479,8 @@ class ForestKeyboardService : InputMethodService() {
     private fun expandedCandidateList(raw:String):List<String>{
         val out=candidateList(raw).toMutableList()
         out.addAll(leadingCandidates(raw))
+        out.addAll(compactDictionary[raw].orEmpty())
+        out.addAll(prefixIndex[raw].orEmpty())
         pinyin[raw]?.let { out.addAll(rank(raw,it)) }
         for(parts in segment(raw).take(24)){
             val spaced=parts.joinToString(" ")
@@ -456,9 +492,9 @@ class ForestKeyboardService : InputMethodService() {
                 combos=combos.flatMap { prefix -> choices.map { prefix+it } }.take(64)
             }
             out.addAll(combos)
-            if(out.size>=96) break
+            if(out.size>=160) break
         }
-        return out.distinct().take(96).ifEmpty { listOf(raw) }
+        return out.distinct().take(160).ifEmpty { listOf(raw) }
     }
 
     private fun segment(raw:String):List<List<String>>{
@@ -543,6 +579,7 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun backspace(){
+        collapseCandidatePanel()
         if(composing.isNotEmpty()){
             composing=composing.dropLast(1)
             currentInputConnection.setComposingText(composing,1)

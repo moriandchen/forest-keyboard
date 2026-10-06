@@ -168,4 +168,58 @@ class ForestKeyboardServiceTest {
         assertEquals("不知道",connection.editable.toString())
     }
 
+
+    private fun expand() {
+        val host=field("candidateHost") as LinearLayout
+        val bar=host.getChildAt(0) as LinearLayout
+        bar.getChildAt(2).performClick()
+        drain()
+        assertEquals(true,field("candidatesExpanded"))
+        assertEquals(2,host.childCount)
+    }
+
+    @Test fun typingClosesPanelImmediatelyAndDoesNotReopenIt() {
+        "shi".forEach { invoke("letter",it.toString()) }; drain(); expand()
+        val host=field("candidateHost") as LinearLayout
+        invoke("letter","j")
+        assertEquals(false,field("candidatesExpanded"))
+        assertEquals(1,host.childCount)
+        drain()
+        assertEquals(1,host.childCount)
+        invoke("letter","i"); drain()
+        assertEquals(1,host.childCount)
+    }
+
+    @Test fun backspaceClosesExpandedPanel() {
+        "shi".forEach { invoke("letter",it.toString()) }; drain(); expand()
+        invoke("backspace")
+        assertEquals(false,field("candidatesExpanded"))
+        assertEquals(1,(field("candidateHost") as LinearLayout).childCount)
+        drain()
+    }
+
+    @Test fun typingReusesCandidateBarAndTargets() {
+        invoke("letter","w"); drain()
+        val host=field("candidateHost") as LinearLayout
+        val bar=host.getChildAt(0)
+        val row=field("candidateRow") as LinearLayout
+        val first=row.getChildAt(0)
+        invoke("letter","o"); drain()
+        assertSame(bar,host.getChildAt(0))
+        assertSame(first,row.getChildAt(0))
+    }
+
+    @Test fun ordinaryTypingDoesNotRunRecursiveSegmentation() {
+        "buzhidao".forEach { invoke("letter",it.toString()) }; drain()
+        assertEquals(0,(field("segmentationCache") as Map<*,*>).size)
+    }
+
+    @Test fun expansionShowsCandidatesBeyondOldPrefixLimit() {
+        (field("candidateWorker") as ExecutorService).submit {
+            @Suppress("UNCHECKED_CAST")
+            val expanded=invoke("expandedCandidateList","b") as List<String>
+            assertTrue(expanded.size>24)
+        }.get(10,TimeUnit.SECONDS)
+    }
+
 }
