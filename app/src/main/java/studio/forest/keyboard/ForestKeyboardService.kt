@@ -143,7 +143,14 @@ class ForestKeyboardService : InputMethodService() {
                     text=word; textSize=20f; gravity=Gravity.CENTER
                     setTextColor(Color.rgb(38,38,42)); setPadding(8.dp,10.dp,8.dp,10.dp)
                     layoutParams=GridLayout.LayoutParams().apply { width=0; columnSpec=GridLayout.spec(GridLayout.UNDEFINED,1,1f) }
-                    setOnClickListener { candidatesExpanded=false; choose(word) }
+                    setOnClickListener {
+                        // Collapse/remove the expanded panel immediately. Some IME hosts
+                        // defer the full root redraw after commitText(), leaving the old
+                        // ScrollView visible even though the state is already false.
+                        candidatesExpanded=false
+                        root.removeAllViews()
+                        choose(word)
+                    }
                 })
             }
             root.addView(ScrollView(this).apply {
