@@ -24,69 +24,23 @@ class ForestKeyboardService : InputMethodService() {
     private var lastCursorStep=0
     private val prefs by lazy { getSharedPreferences("forest_learning", Context.MODE_PRIVATE) }
 
-    private val pinyin = mapOf(
-        "wo" to listOf("我","握","窩","喔"),
-        "ni" to listOf("你","妳","呢","泥"),
-        "hao" to listOf("好","號","浩","豪"),
-        "shi" to listOf("是","時","事","市","十"),
-        "de" to listOf("的","得","德"),
-        "le" to listOf("了","樂","勒"),
-        "ma" to listOf("嗎","媽","馬","嘛"),
-        "ai" to listOf("愛","哎","唉"),
-        "zai" to listOf("在","再","載"),
-        "you" to listOf("有","又","由","友"),
-        "bu" to listOf("不","部","步"),
-        "ren" to listOf("人","認","任"),
-        "jin" to listOf("今","金","進"),
-        "tian" to listOf("天","田","甜"),
-        "jin tian" to listOf("今天"),
-        "sen" to listOf("森"),
-        "lin" to listOf("林"),
-        "sen lin" to listOf("森林"),
-        "zhong" to listOf("中","種","重"),
-        "wen" to listOf("文","問","聞"),
-        "zhong wen" to listOf("中文"),
-        "jin tian" to listOf("今天"),
-        "ming tian" to listOf("明天"),
-        "xian zai" to listOf("現在"),
-        "wo men" to listOf("我們"),
-        "ni men" to listOf("你們"),
-        "ke yi" to listOf("可以"),
-        "xi huan" to listOf("喜歡"),
-        "hen" to listOf("很","狠","恨"),
-        "zhen" to listOf("真","鎮","珍"),
-        "zhen de" to listOf("真的"),
-        "xiang" to listOf("想","像","向","香"),
-        "yao" to listOf("要","咬","藥"),
-        "qu" to listOf("去","區","取"),
-        "kan" to listOf("看","砍","刊"),
-        "da" to listOf("大","打","答"),
-        "zi" to listOf("字","子","自"),
-        "jian" to listOf("見","件","間"),
-        "jing" to listOf("精","經","京"),
-        "shen" to listOf("神","身","深"),
-        "ling" to listOf("領","零","靈"),
-        "xiu" to listOf("袖","秀","修"),
-        "jing shen" to listOf("精神"),
-        "ling xiu" to listOf("領袖"),
-        "jing shen ling xiu" to listOf("精神領袖"),
-        "sen lin" to listOf("森林"),
-        "jian pan" to listOf("鍵盤"),
-        "chi" to listOf("吃","持","遲","池"),
-        "fan" to listOf("飯","反","凡","翻"),
-        "chi fan" to listOf("吃飯"),
-        "gong" to listOf("工","公","功","宮"),
-        "zuo" to listOf("作","做","座","左"),
-        "gong zuo" to listOf("工作"),
-        "xin" to listOf("新","心","信","辛"),
-        "xin wen" to listOf("新聞"),
-        "shou" to listOf("手","受","首","收"),
-        "ji" to listOf("機","幾","及","記"),
-        "shou ji" to listOf("手機"),
-        "dian" to listOf("電","點","店","典"),
-        "nao" to listOf("腦","鬧"),
-        "dian nao" to listOf("電腦")
-    )
+    private val pinyin by lazy { loadDictionary() }
+
+    private fun loadDictionary():Map<String,List<String>>{
+        val out=linkedMapOf<String,MutableList<String>>()
+        resources.openRawResource(R.raw.pinyin_dict).bufferedReader(Charsets.UTF_8).useLines { lines ->
+            lines.forEach { line ->
+                val clean=line.trim()
+                if(clean.isBlank() || clean.startsWith("#")) return@forEach
+                val parts=clean.split("\\t",limit=2)
+                if(parts.size!=2) return@forEach
+                val py=parts[0].trim()
+                val words=parts[1].trim().split(" ").filter { it.isNotBlank() }
+                if(words.isNotEmpty()) out.getOrPut(py){ mutableListOf() }.addAll(words)
+            }
+        }
+        return out.mapValues { (_,v) -> v.distinct() }
+    }
 
     override fun onCreateInputView(): View {
         root=LinearLayout(this).apply {
