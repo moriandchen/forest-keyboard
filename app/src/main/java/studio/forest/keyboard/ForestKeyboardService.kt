@@ -71,7 +71,21 @@ class ForestKeyboardService : InputMethodService() {
         "ling xiu" to listOf("領袖"),
         "jing shen ling xiu" to listOf("精神領袖"),
         "sen lin" to listOf("森林"),
-        "jian pan" to listOf("鍵盤")
+        "jian pan" to listOf("鍵盤"),
+        "chi" to listOf("吃","持","遲","池"),
+        "fan" to listOf("飯","反","凡","翻"),
+        "chi fan" to listOf("吃飯"),
+        "gong" to listOf("工","公","功","宮"),
+        "zuo" to listOf("作","做","座","左"),
+        "gong zuo" to listOf("工作"),
+        "xin" to listOf("新","心","信","辛"),
+        "xin wen" to listOf("新聞"),
+        "shou" to listOf("手","受","首","收"),
+        "ji" to listOf("機","幾","及","記"),
+        "shou ji" to listOf("手機"),
+        "dian" to listOf("電","點","店","典"),
+        "nao" to listOf("腦","鬧"),
+        "dian nao" to listOf("電腦")
     )
 
     override fun onCreateInputView(): View {
