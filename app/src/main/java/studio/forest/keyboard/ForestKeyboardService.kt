@@ -32,7 +32,7 @@ class ForestKeyboardService : InputMethodService() {
             lines.forEach { line ->
                 val clean=line.trim()
                 if(clean.isBlank() || clean.startsWith("#")) return@forEach
-                val parts=clean.split("\\t",limit=2)
+                val parts=clean.split("\t",limit=2)
                 if(parts.size!=2) return@forEach
                 val py=parts[0].trim()
                 val words=parts[1].trim().split(" ").filter { it.isNotBlank() }
