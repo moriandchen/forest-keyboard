@@ -230,7 +230,7 @@ class ForestKeyboardService : InputMethodService() {
             renderCandidates(candidateHost,raw,words,all)
         }
         if(raw.isBlank()) {
-            applyWords(listOf("繁","簡","「」","常用"),emptyList(),emptyMap())
+            applyWords(listOf("「」","、","：","；"),emptyList(),emptyMap())
             return
         }
         // Old candidates may remain visible while loading, but cannot commit for
@@ -322,6 +322,7 @@ class ForestKeyboardService : InputMethodService() {
                     when {
                         target.raw.isNotBlank() -> choose(target.word)
                         target.word=="「」" -> { commit("「」"); send(KeyEvent.KEYCODE_DPAD_LEFT) }
+                        target.word in listOf("、","：","；") -> punct(target.word)
                     }
                 }
             })
@@ -426,8 +427,7 @@ class ForestKeyboardService : InputMethodService() {
         // Keep ranking dynamic so personal learning takes effect immediately.
         candidateCache[raw]?.let { return rank(raw,it) }
         val base = pinyin[raw] ?: run {
-            // Typing uses dictionary/index lookups only. Synthetic combinations
-            // and recursive segmentation are deferred until explicit expansion.
+            // Cache dictionary order only; personal ranking stays dynamic.
             val exact=compactDictionary[raw].orEmpty()
             val predicted=prefixCandidates(raw)
             val leading=leadingCandidates(raw)
@@ -443,7 +443,7 @@ class ForestKeyboardService : InputMethodService() {
         if(raw.isBlank()) return emptyList()
         val head=syllablesByInitial[raw.first()].orEmpty().firstOrNull { raw.startsWith(it) }
             ?: return emptyList()
-        return rank(head,pinyin[head].orEmpty())
+        return pinyin[head].orEmpty()
     }
 
     private fun consumedLength(raw:String, word:String):Int {
@@ -482,19 +482,8 @@ class ForestKeyboardService : InputMethodService() {
         out.addAll(compactDictionary[raw].orEmpty())
         out.addAll(prefixIndex[raw].orEmpty())
         pinyin[raw]?.let { out.addAll(rank(raw,it)) }
-        for(parts in segment(raw).take(24)){
-            val spaced=parts.joinToString(" ")
-            pinyin[spaced]?.let { out.addAll(rank(raw,it)) }
-            // Build several combinations instead of only the first character of each syllable.
-            var combos=listOf("")
-            for(part in parts){
-                val choices=pinyin[part].orEmpty().take(4)
-                combos=combos.flatMap { prefix -> choices.map { prefix+it } }.take(64)
-            }
-            out.addAll(combos)
-            if(out.size>=160) break
-        }
-        return out.distinct().take(160).ifEmpty { listOf(raw) }
+        // Offer actual dictionary entries, not Cartesian products of homophones.
+        return rank(raw,out.distinct()).take(160).ifEmpty { listOf(raw) }
     }
 
     private fun segment(raw:String):List<List<String>>{
@@ -554,9 +543,17 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun rank(raw:String, words:List<String>):List<String>{
-        val frequencies=words.associateWith { prefs.getInt("freq|" + raw + "|" + it,0) }
+        val exact=compactDictionary[raw].orEmpty().toHashSet()
+        val frequencies=words.associateWith { word ->
+            val direct=prefs.getInt("freq|" + raw + "|" + word,0)
+            val consumed=consumedLength(raw,word)
+            val leading=if(consumed<raw.length)
+                prefs.getInt("freq|" + raw.take(consumed) + "|" + word,0) else 0
+            maxOf(direct,leading)
+        }
         return words.withIndex()
-            .sortedWith(compareByDescending<IndexedValue<String>> { frequencies[it.value] ?: 0 }
+            .sortedWith(compareBy<IndexedValue<String>> { if(it.value in exact) 0 else 1 }
+                .thenByDescending { frequencies[it.value] ?: 0 }
                 .thenBy { it.index })
             .map { it.value }
     }

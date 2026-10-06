@@ -14,7 +14,7 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         val box = LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; setPadding(48,64,48,48) }
         box.addView(TextView(this).apply {
-            text="Forest Keyboard\nV0.9.3 · 輸入手感更新\n\n繁體拼音、即時候選與本機詞頻學習。\n本版更新：候選列穩定刷新、打字自動收起展開面板，並保留分段選字及 ，。？！"; textSize=20f
+            text="Forest Keyboard\nV0.9.4 · 輸入手感更新\n\n繁體拼音、即時候選與本機詞頻學習。\n本版更新：完整詞優先、分段學習即時排序、移除硬拼錯詞，並保留分段選字及 ，。？！"; textSize=20f
         })
         box.addView(Button(this).apply { text="启用 Forest Keyboard"; setOnClickListener { startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)) } })
         box.addView(Button(this).apply { text="选择输入法"; setOnClickListener { (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker() } })

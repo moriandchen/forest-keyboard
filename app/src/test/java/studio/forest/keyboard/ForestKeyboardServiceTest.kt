@@ -222,4 +222,43 @@ class ForestKeyboardServiceTest {
         }.get(10,TimeUnit.SECONDS)
     }
 
+    @Test fun completePhraseStaysFirstDespiteFrequentLeadingWord() {
+        repeat(20) { invoke("learn","bu","不") }
+        val words=invoke("candidateList","buzhidao") as List<*>
+        assertEquals("不知道",words.first())
+    }
+
+    @Test fun partialLearningChangesCachedCandidateOrder() {
+        invoke("candidateList","geiwo")
+        repeat(5) { invoke("learn","gei","給") }
+        val words=invoke("candidateList","geiwo") as List<*>
+        assertEquals("給我",words.first())
+        assertEquals("給",words[1])
+    }
+
+    @Test fun expansionDoesNotInventHomophonePhrases() {
+        val words=invoke("expandedCandidateList","buzhidao") as List<*>
+        assertTrue(words.contains("不知道"))
+        assertFalse(words.contains("不之到"))
+        assertFalse(words.contains("不只倒"))
+    }
+
+    @Test fun everydayPhrasesHaveExactFirstCandidate() {
+        val examples=mapOf("jintian" to "今天", "keyi" to "可以", "xihuan" to "喜歡",
+            "pengyou" to "朋友", "xuesheng" to "學生", "laoshi" to "老師",
+            "kuaile" to "快樂", "haode" to "好的", "xiexie" to "謝謝",
+            "wanan" to "晚安", "meiguanxi" to "沒關係", "geiwo" to "給我",
+            "buzhidao" to "不知道")
+        examples.forEach { (raw,word) ->
+            assertEquals(raw,word,(invoke("candidateList",raw) as List<*>).first())
+        }
+    }
+
+    @Test fun idleShortcutsActuallyInsertPunctuation() {
+        val row=field("candidateRow") as LinearLayout
+        assertEquals("「」",(row.getChildAt(0) as TextView).text.toString())
+        row.getChildAt(1).performClick()
+        assertEquals("、",connection.editable.toString())
+    }
+
 }
