@@ -3726,3 +3726,7 @@ you guan gui ding	有關規定
 you xian gong si	有限公司
 yu yan wen ming	語言文明
 ao da li ya	澳大利亞
+
+# Forest practical phrase corrections
+bu zhi dao	不知道
+gei wo	給我

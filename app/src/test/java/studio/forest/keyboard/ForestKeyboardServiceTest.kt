@@ -128,4 +128,44 @@ class ForestKeyboardServiceTest {
             assertFalse(words.contains("精神領袖"))
         }.get(10,TimeUnit.SECONDS)
     }
+
+    @Test fun selectOneCharacterAtATimeWithoutLosingSuffix() {
+        "buzhidao".forEach { invoke("letter",it.toString()) }; drain()
+        assertTrue((field("displayedWords") as List<*>).contains("不知道"))
+        assertTrue((field("displayedWords") as List<*>).contains("不"))
+        invoke("choose","不"); drain()
+        assertEquals("zhidao",field("composing"))
+        assertEquals("不zhidao",connection.editable.toString())
+        invoke("choose","知"); drain()
+        assertEquals("dao",field("composing"))
+        assertEquals("不知dao",connection.editable.toString())
+        invoke("choose","道"); drain()
+        assertEquals("",field("composing"))
+        assertEquals("不知道",connection.editable.toString())
+    }
+
+    @Test fun geiwoCanBeSelectedSeparately() {
+        "geiwo".forEach { invoke("letter",it.toString()) }; drain()
+        assertTrue((field("displayedWords") as List<*>).contains("給我"))
+        invoke("choose","給"); drain()
+        assertEquals("wo",field("composing"))
+        assertEquals("給wo",connection.editable.toString())
+        invoke("choose","我"); drain()
+        assertEquals("給我",connection.editable.toString())
+    }
+
+    @Test fun partialSyllableRemainsAfterChoosingLeadingCharacter() {
+        "xih".forEach { invoke("letter",it.toString()) }; drain()
+        invoke("choose","喜"); drain()
+        assertEquals("h",field("composing"))
+        assertEquals("喜h",connection.editable.toString())
+    }
+
+    @Test fun wholePhraseStillCommitsInOneTap() {
+        "buzhidao".forEach { invoke("letter",it.toString()) }; drain()
+        invoke("choose","不知道"); drain()
+        assertEquals("",field("composing"))
+        assertEquals("不知道",connection.editable.toString())
+    }
+
 }

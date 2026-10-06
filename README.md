@@ -2,7 +2,14 @@
 
 原生 Android 系統輸入法，繁體拼音優先。測試機：Huawei nova 5T。
 
-## V0.9.1 · 輸入手感更新
+## V0.9.2 · 分段選字
+
+- 輸入 `buzhidao` 可整詞選「不知道」，或依次選「不」→「知」→「道」。
+- 輸入 `geiwo` 可選「給我」，或選「給」後保留 `wo` 再選「我」。
+- 選字消耗長度與候選一同在背景計算；不在點按時掃詞庫。
+- 分段選字仍自動收起展開面板，剩餘拼音繼續顯示候選。
+
+### 保留 V0.9.1 的輸入手感改善
 
 - 詞庫、前綴索引預熱與候選生成在單一背景執行緒執行；快速按鍵合併查詢。
 - 查詢結果檢查版本與 composing，過期結果不更新畫面。
@@ -18,7 +25,7 @@
 
 GitHub Actions 執行 `gradle :app:testDebugUnitTest` 與 `gradle :app:assembleDebug`。
 Robolectric 回歸測試涵蓋 composing、快速查詢、過期候選、前綴與展開一致性。
-Artifact：`Forest-Keyboard-V0.9.1-debug`。
+Artifact：`Forest-Keyboard-V0.9.2-debug`。
 
 真機重點：快速輸入／退格、橫向及展開選字、空格選字、中文／英文標點、切 App。
 本版仍待真機 QA，不代表手感已驗收。

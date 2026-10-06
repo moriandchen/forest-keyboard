@@ -39,6 +39,7 @@ class ForestKeyboardService : InputMethodService() {
     private var candidateRevision = 0
     private var displayedRaw = ""
     private var displayedWords = emptyList<String>()
+    private var displayedConsumption = emptyMap<String,Int>()
     private var chooseOnReady = false
     private var candidateTouch = false
     private var deferredCandidates: (() -> Unit)? = null
@@ -53,6 +54,18 @@ class ForestKeyboardService : InputMethodService() {
             .filter { !it.contains(" ") }
             .sortedByDescending { it.length }
             .toList()
+    }
+    private val compactDictionary by lazy {
+        val out=linkedMapOf<String,MutableList<String>>()
+        for((py,words) in pinyin) out.getOrPut(py.replace(" ","")) { mutableListOf() }.addAll(words)
+        out.mapValues { it.value.distinct() }
+    }
+    private val wordPinyin by lazy {
+        val out=mutableMapOf<String,MutableSet<String>>()
+        for((py,words) in pinyin) for(word in words) {
+            out.getOrPut(word) { linkedSetOf() }.add(py.replace(" ",""))
+        }
+        out.mapValues { it.value.toList() }
     }
     private val syllablesByInitial by lazy { syllables.groupBy { it.first() } }
     private val syllablePrefixes by lazy {
@@ -105,7 +118,8 @@ class ForestKeyboardService : InputMethodService() {
         super.onCreate()
         candidateWorker.submit {
             // Warm up off the UI thread, including SharedPreferences disk loading.
-            pinyin.size; syllablesByInitial.size; syllablePrefixes.size; prefixIndex.size
+            pinyin.size; compactDictionary.size; wordPinyin.size
+            syllablesByInitial.size; syllablePrefixes.size; prefixIndex.size
             prefs.all
         }
     }
@@ -120,6 +134,7 @@ class ForestKeyboardService : InputMethodService() {
         chooseOnReady=false
         displayedRaw=""
         displayedWords=emptyList()
+        displayedConsumption=emptyMap()
         composing=""
         candidatesExpanded=false
     }
@@ -191,14 +206,15 @@ class ForestKeyboardService : InputMethodService() {
         candidateJob?.cancel(true)
         scheduledRefresh?.let { mainHandler.removeCallbacks(it) }
         deferredCandidates=null
-        fun applyWords(words:List<String>, all:List<String>) {
+        fun applyWords(words:List<String>, all:List<String>, consumption:Map<String,Int>) {
             if(revision!=candidateRevision || raw!=composing || numeric) return
             if(candidateTouch) {
-                deferredCandidates={ applyWords(words,all) }
+                deferredCandidates={ applyWords(words,all,consumption) }
                 return
             }
             displayedRaw=raw
             displayedWords=words
+            displayedConsumption=consumption
             candidateHost.alpha=1f
             if(chooseOnReady && words.isNotEmpty()) {
                 chooseOnReady=false
@@ -209,7 +225,7 @@ class ForestKeyboardService : InputMethodService() {
             renderCandidates(candidateHost,raw,words,all)
         }
         if(raw.isBlank()) {
-            applyWords(listOf("繁","簡","「」","常用"),emptyList())
+            applyWords(listOf("繁","簡","「」","常用"),emptyList(),emptyMap())
             return
         }
         // Old candidates may remain visible while loading, but cannot commit for
@@ -221,8 +237,9 @@ class ForestKeyboardService : InputMethodService() {
                 try {
                     val words=candidateList(raw)
                     val all=if(expanded) expandedCandidateList(raw) else emptyList()
+                    val consumption=(words+all).distinct().associateWith { consumedLength(raw,it) }
                     if(!Thread.currentThread().isInterrupted) {
-                        mainHandler.post { applyWords(words,all) }
+                        mainHandler.post { applyWords(words,all,consumption) }
                     }
                 } catch (_: InterruptedException) {
                     // Superseded by a new key. Never cache a partial computation.
@@ -370,22 +387,37 @@ class ForestKeyboardService : InputMethodService() {
         // Keep ranking dynamic so personal learning takes effect immediately.
         candidateCache[raw]?.let { return rank(raw,it) }
         val base = pinyin[raw] ?: run {
+            val exact=compactDictionary[raw].orEmpty()
             val phrases = mutableListOf<String>()
             for(parts in segment(raw).take(12)){
-                val spaced=parts.joinToString(" ")
-                pinyin[spaced]?.let { phrases.addAll(it) }
+                pinyin[parts.joinToString(" ")]?.let { phrases.addAll(it) }
                 val perSyllable=parts.map { pinyin[it]?.firstOrNull() }
                 if(perSyllable.all { it != null }) phrases += perSyllable.filterNotNull().joinToString("")
             }
-            // If the last syllable is still incomplete (e.g. xih -> xi + h...),
-            // preserve candidates for the completed prefix and predict dictionary
-            // entries whose compact Pinyin starts with what the user has typed.
-            phrases.addAll(prefixCandidates(raw))
-            phrases.distinct().take(12).ifEmpty { listOf(raw) }
+            // Keep known whole words first, then expose the completed leading
+            // syllable so the user can resolve the rest one character at a time.
+            val leading=leadingCandidates(raw)
+            (exact + leading.take(8) + phrases + prefixCandidates(raw))
+                .distinct().take(16).ifEmpty { listOf(raw) }
         }
         if(Thread.currentThread().isInterrupted) throw InterruptedException()
         candidateCache[raw]=base
         return rank(raw,base)
+    }
+
+    private fun leadingCandidates(raw:String):List<String> {
+        if(raw.isBlank()) return emptyList()
+        val head=syllablesByInitial[raw.first()].orEmpty().firstOrNull { raw.startsWith(it) }
+            ?: return emptyList()
+        return rank(head,pinyin[head].orEmpty())
+    }
+
+    private fun consumedLength(raw:String, word:String):Int {
+        // Computed on the worker alongside the candidate snapshot, never while
+        // handling a tap. Predicted whole words and synthesized combinations
+        // consume the typed prefix; leading words consume only their own Pinyin.
+        return wordPinyin[word].orEmpty().filter { raw.startsWith(it) }
+            .maxOfOrNull { it.length } ?: raw.length
     }
 
     private fun prefixCandidates(raw:String):List<String>{
@@ -412,6 +444,7 @@ class ForestKeyboardService : InputMethodService() {
 
     private fun expandedCandidateList(raw:String):List<String>{
         val out=candidateList(raw).toMutableList()
+        out.addAll(leadingCandidates(raw))
         pinyin[raw]?.let { out.addAll(rank(raw,it)) }
         for(parts in segment(raw).take(24)){
             val spaced=parts.joinToString(" ")
@@ -457,12 +490,23 @@ class ForestKeyboardService : InputMethodService() {
 
     private fun choose(word:String){
         val raw=composing
-        learn(raw,word)
-        // setComposingText() already placed the visible Pinyin in the editor.
-        // Replace that composing span with the selected Chinese candidate;
-        // do NOT finish it first, otherwise the raw Pinyin becomes permanent.
-        currentInputConnection.commitText(word,1)
-        composing=""
+        if(raw.isEmpty()) return
+        val consumed=(if(displayedRaw==raw) displayedConsumption[word] else null)
+            ?.coerceIn(1,raw.length) ?: raw.length
+        val remaining=raw.drop(consumed)
+        val connection=currentInputConnection ?: return
+        // Replace the entire existing composing span with just the chosen word,
+        // then create a new composing span for the unconsumed suffix. Batch both
+        // editor operations to avoid an intermediate selection callback.
+        connection.beginBatchEdit()
+        try {
+            if(!connection.commitText(word,1)) return
+            composing=remaining
+            if(remaining.isNotEmpty()) connection.setComposingText(remaining,1)
+        } finally {
+            connection.endBatchEdit()
+        }
+        learn(raw.take(consumed),word)
         candidatesExpanded=false
         refreshCandidates()
     }
