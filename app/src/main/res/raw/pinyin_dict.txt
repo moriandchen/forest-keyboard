@@ -1,46 +1,50 @@
-# Forest Keyboard Traditional Chinese Pinyin Dictionary v0.7
+# Forest Keyboard V0.8 Common Traditional Chinese Dictionary
+# Base: Rime librime dictionary_test (AOSP PinyinIME excerpt)
+# Traditional conversion: OpenCC STPhrases + STCharacters
+# Rime/librime: BSD-3-Clause; OpenCC: Apache-2.0
+# Forest custom entries have priority.
 # format: pinyin<TAB>space-separated candidates
 wo	我 握 窩 喔
-ni	你 妳 呢 泥
+ni	你 妳 呢 泥 擬 尼
 hao	好 號 浩 豪
-shi	是 時 事 市 十
-de	的 得 德
+shi	是 時 事 市 十 師 使 式 試 石 室 詩 食 史 世 實
+de	的 得 德 地
 le	了 樂 勒
-ma	嗎 媽 馬 嘛
-ai	愛 哎 唉
+ma	嗎 媽 馬 嘛 罵 碼 麻
+ai	愛 哎 唉 艾
 zai	在 再 載
-you	有 又 由 友
-bu	不 部 步
-ren	人 認 任
-jin	今 金 進
-tian	天 田 甜
+you	有 又 由 友 油 遊 右
+bu	不 部 步 補 布
+ren	人 認 任 忍
+jin	今 金 進 近 僅 盡 緊
+tian	天 田 甜 填
 jin tian	今天
-ming	明 名 鳴
+ming	明 名 鳴 命
 ming tian	明天
-xian	現 先 線
+xian	現 先 線 縣 咁 閒 仙
 xian zai	現在
-men	們 門
+men	們 門 悶
 wo men	我們
 ni men	你們
-ke	可 科 刻
-yi	以 一 已 意
+ke	可 科 刻 課 克 客
+yi	以 一 已 意 億 易 亦 伊 依 衣 義
 ke yi	可以
-xi	喜 西 希
-huan	歡 換 還
+xi	喜 西 希 系 洗 戲 係 細
+huan	歡 換 還 環
 xi huan	喜歡
 hen	很 狠 恨
 zhen	真 鎮 珍
 zhen de	真的
-xiang	想 像 向 香
-yao	要 咬 藥
-qu	去 區 取
+xiang	想 像 向 香 象 相 項 鄉 箱 響
+yao	要 咬 藥 腰
+qu	去 區 取 曲 佢
 kan	看 砍 刊
-da	大 打 答
-zi	字 子 自
-jian	見 件 間
-jing	精 經 京
-shen	神 身 深
-ling	領 零 靈
+da	大 打 答 達
+zi	字 子 自 紫
+jian	見 件 間 建 劍 鍵 兼 減
+jing	精 經 京 靜 竟 景 淨
+shen	神 身 深 沈
+ling	領 零 靈 另 令
 xiu	袖 秀 修
 jing shen	精神
 ling xiu	領袖
@@ -48,31 +52,3677 @@ jing shen ling xiu	精神領袖
 sen	森
 lin	林
 sen lin	森林
-zhong	中 種 重
-wen	文 問 聞
+zhong	中 種 重 鍾 仲 衆
+wen	文 問 聞 溫 穩
 zhong wen	中文
 pan	盤 判
 jian pan	鍵盤
-chi	吃 持 遲 池
-fan	飯 反 凡 翻
-chi fan	吃飯
-gong	工 公 功 宮
-zuo	作 做 座 左
+chi	吃 持 遲 池 喫
+fan	飯 反 凡 翻 煩 範
+chi fan	吃飯 喫飯
+gong	工 公 功 宮 共 供
+zuo	作 做 座 左 坐
 gong zuo	工作
 xin	新 心 信 辛
 xin wen	新聞
-shou	手 受 首 收
-ji	機 幾 及 記
-shou ji	手機
+shou	手 受 首 收 瘦 守
+ji	機 幾 及 記 級 即 既 急 集 極 雞 寄 基 繼 吉
+shou ji	手機 收集
 dian	電 點 店 典
 nao	腦 鬧
 dian nao	電腦
-xue	學 雪 穴
-sheng	生 聲 勝
+xue	學 雪 穴 血
+sheng	生 聲 勝 省 升 盛 聖
 xue sheng	學生
 lao	老 牢
-shi	師 是 時 事 市 十
-lao shi	老師
-peng	朋 蓬
-you	友 有 又 由
+lao shi	老師 老是
+peng	朋 蓬 碰
 peng you	朋友
+ba	吧 把 八 爸 巴
+bai	白 百
+ban	辦 版 半 班 板 般 搬
+bang	幫 棒
+bao	包 報 寶 抱 保 爆
+ben	本 笨
+bei	被 唄 北 背 倍 杯
+bi	比 必 筆 逼
+bian	便 邊 變 遍 編
+biao	表 標
+bie	別
+bing	並 病 冰 兵
+bo	波 博
+pa	怕 爬
+pai	拍 派 排 牌
+pang	胖
+pao	跑 泡 拋
+pei	陪 配
+pi	皮 批 屁
+pian	片 篇 騙 偏
+piao	票
+pin	品
+ping	平 憑
+po	破
+mai	買 賣 麥
+man	慢 滿 蠻
+mang	忙
+mao	毛 貓 冇 冒
+me	麼
+meng	夢 猛
+mei	沒 每 美 梅 妹
+mi	米 迷
+mian	面 免
+miao	秒
+mie	咩 滅
+min	民 敏
+mo	莫 摸 魔 末
+mou	某
+mu	木 母
+fa	發 法 伐
+fang	放 方 房 防
+fen	分 份 粉
+feng	風 封 峯 瘋 馮
+fei	非 飛 費 肥
+fo	佛
+fou	否
+fu	副 付 服 福 富 負 夫
+duan	段 短 斷 端
+dai	帶 待 代 呆 戴
+dan	但 單 蛋
+dang	當 黨 檔
+dao	到 道 倒 刀 島
+deng	等 燈 登 鄧
+dei	得
+di	地 第 低 滴 底 睇
+diao	掉
+die	跌
+ding	定 頂 丁 訂
+diu	丟
+dou	都 鬥
+dong	動 懂 東 洞
+du	讀 度 都 毒 杜
+duo	多
+dui	對 隊
+tuan	團
+ta	他 她 它 塔
+tai	太 臺
+tan	談
+tang	湯 唐 堂 糖
+tao	套
+te	特
+teng	疼
+ti	提 體 題 踢 替
+tiao	條 跳 調 挑
+tie	貼 帖 鐵
+ting	聽 挺 停
+tou	頭 投 偷
+tong	同 通 痛
+tu	圖 土 吐
+tuo	托 拖 脫
+tui	退 推 腿
+n	嗯
+nv	女
+na	那 拿 哪
+nai	乃 奶
+nan	男 難 南
+ne	呢
+nen	嫩
+neng	能
+nei	內
+nian	年 念
+niao	鳥
+niang	娘
+nie	捏
+nin	您
+ning	寧
+niu	牛
+nong	弄
+nu	怒
+luan	亂
+lun	論 輪
+lv	率 綠
+la	啦 拉
+lai	來
+lan	藍 爛 蘭 懶
+lang	狼
+leng	冷
+lei	類 累 雷 淚
+li	裏 李 離 力 理 立 利 麗 例
+lia	倆
+lian	連 練 臉 聯
+liao	了 聊 料
+liang	兩 量 亮 梁 良
+lie	列 咧
+liu	劉 留 六 流 柳
+lo	咯
+lou	樓 嘍
+long	龍
+lu	路 陸 錄
+luo	羅 落
+gua	掛
+guan	管 關 官 觀
+guang	光 廣 逛
+gun	滾
+guai	乖 怪
+ga	噶 嘎
+gai	該 改 蓋
+gan	幹 甘 感 敢 趕
+gang	剛 港
+gao	高 搞 告
+ge	個 各 格 歌 哥
+gen	跟 根
+geng	更
+gei	給
+gou	夠 狗
+gu	股 故 古 顧 谷
+guo	過 國 果 郭
+gui	貴 鬼 歸
+kuan	款 寬
+kuang	狂
+kun	困
+kuai	快 塊
+ka	卡
+kai	開
+kang	抗 康
+kao	靠 考
+ken	肯
+kou	口 扣
+kong	空 孔
+ku	哭 庫 苦
+kui	虧
+hua	話 花 化 畫 華
+huang	黃
+hun	混
+huai	壞
+ha	哈
+hai	還 海 害
+han	汗 喊 含 寒 韓 漢
+hang	行
+he	和 喝 何 合 河 呵
+heng	橫
+hei	黑
+hou	後 厚 侯
+hong	紅 宏
+hu	胡 戶 湖 虎
+huo	或 活 貨 火 獲
+hui	會 回
+juan	卷
+jue	覺
+jun	均 軍 君
+jia	家 加 假 價 架 甲 佳
+jiao	叫 交 教 較 腳
+jiang	將 講 江 獎 降
+jie	接 借 解 節 姐 街 界 結 傑 皆
+jiong	囧
+jiu	就 酒 久 舊 九 救
+ju	據 局 距 句 居
+quan	全 權 圈
+que	卻 缺
+qun	羣
+qi	其 起 期 氣 器 七 齊 奇
+qian	錢 前 千 籤 欠
+qiao	橋
+qiang	強 搶 槍 牆
+qie	且 切
+qin	親 秦 琴
+qing	請 清 情 輕 青
+qiong	窮
+qiu	球 求 秋
+xuan	選
+xia	下 夏 嚇
+xiao	小 笑 曉 肖
+xie	寫 些 謝 鞋
+xing	行 性 型 星 姓 醒 興 形
+xiong	熊 兄
+xu	需 須 徐 許
+zhua	抓
+zhuan	轉 賺 專
+zhuang	裝 狀 莊
+zhun	準
+zhan	站 佔 戰 展
+zhang	張 漲 長 章
+zhao	找 照 趙 招 着
+zhe	這 着 者 折
+zheng	正 整 證 鄭 掙 爭
+zhei	這
+zhi	之 只 至 值 指 知 直 制 紙 治 志 支 致
+zhou	周 州
+zhu	住 豬 主 朱 祝 著 煮 注
+zhui	追
+chuan	傳 穿 船 川
+chuang	牀 創
+chun	春 純
+cha	差 查 茶 插
+chai	拆
+chan	產
+chang	長 唱 常 廠 場
+chao	超 炒 朝 吵
+che	車
+chen	陳
+cheng	成 稱 城 呈 程
+chou	抽 醜 臭
+chong	衝 重 充
+chu	出 處 除 初
+chui	吹
+shua	刷 耍
+shuang	爽 雙
+shun	順
+shuai	帥
+sha	啥 殺 傻 沙
+shai	曬
+shan	山 刪 閃 善
+shang	上 商 傷 尚
+shao	少 燒
+she	設 社
+shei	誰
+shu	書 數 樹 輸 屬 熟
+shuo	說
+shui	誰 水 睡 稅
+ruan	軟
+ran	然
+rang	讓
+re	熱
+reng	仍 扔
+ri	日
+rou	肉
+rong	榮
+ru	如 入
+ruo	若 弱
+za	咋 砸 雜
+zan	咱 贊
+zao	早 造 遭
+ze	則
+zeng	曾 增
+zei	賊
+zou	走
+zong	總 宗
+zu	組 租 足
+zui	最 嘴 罪
+cun	村 存 寸
+ca	擦
+cai	才 菜 猜 踩 蔡
+can	慘
+cao	草 操 曹
+ce	測
+ceng	曾 層
+ci	次 此 詞
+cong	從
+cuo	錯
+suan	算 酸
+sun	孫
+sa	撒
+sai	賽 塞
+san	三 散
+se	色
+si	死 四 思 斯 似 司
+sou	搜
+song	送 宋 松
+su	素 蘇
+suo	所 鎖
+sui	歲 隨 雖
+yuan	元 遠 原 源 員 園 院 願 圓
+yue	月 越 約
+yun	暈 雲 運
+ya	呀 丫 壓 亞 牙 雅 押
+yan	眼 煙 演 言
+yang	樣 楊 養 陽 羊 洋
+ye	也 頁 葉 業 夜 野 耶
+yin	因 引 銀 音 印
+ying	應 贏 英 硬 影
+yo	喲
+yong	用 永
+yu	與 於 魚 雨 玉 欲 餘 語
+wa	哇 挖 瓦
+wai	外
+wan	玩 萬 完 晚
+wang	網 王 往 忘 望
+wei	爲 未 位 喂 味 微 偉
+wu	無 五 唔 吳 物 吾 舞 武
+a	啊 阿 吖
+an	按 俺 安 案 暗
+ao	奧
+e	額 俄 餓 呃 惡 哦
+en	恩 嗯
+er	而 二 兒 爾
+o	哦 噢
+ou	偶 歐
+ng	嗯
+ba ba	爸爸
+ba ma	爸媽
+ba ta	把它 把他
+ba ni	把你
+ba le	罷了
+ba gua	八卦
+ba wo	把握 把我
+bai bai	拜拜
+bai du	百度
+bai tian	白天
+bai tuo	擺脫
+bai xing	百姓
+bai chi	白癡
+bai se	白色
+ban ben	版本
+ban fa	辦法
+ban de	般的
+ban tian	半天
+ban nian	半年
+ban li	辦理
+ban ge	半個
+ban gong	辦公
+ban kuai	板塊
+ban jia	搬家
+ban quan	版權
+ban zhu	版主 斑竹
+ban yan	扮演
+bang mang	幫忙
+bang ni	幫你
+bang zhu	幫助
+bang wo	幫我
+bao bao	寶寶
+bao bei	寶貝
+bao biao	報表
+bao ming	報名
+bao fa	爆發
+bao dao	報道
+bao li	暴力
+bao liu	保留
+bao gao	報告
+bao kuo	包括
+bao han	包含
+bao hu	保護
+bao jia	報價
+bao qian	抱歉
+bao xian	保險
+bao xiao	報銷
+bao zhuang	包裝
+bao zhang	保障
+bao zhe	抱着
+bao zheng	保證
+bao zhi	報紙
+bao chi	保持
+bao cun	保存
+ben di	本地
+ben lai	本來
+ben ke	本科
+ben zhan	本站
+ben zhi	本質
+ben zhou	本週
+ben shen	本身
+ben shu	本書
+ben ren	本人
+ben ci	本次
+ben wang	本網
+ben wen	本文
+beng kui	崩潰
+bei fang	北方
+bei fen	備份
+bei da	北大
+bei hou	背後
+bei jing	北京 背景
+bei ren	被人
+bi mian	避免
+bi li	比例
+bi jiao	比較
+bi jing	畢竟
+bi xu	必須
+bi zhe	筆者
+bi shi	鄙視
+bi ran	必然
+bi ru	比如
+bi zi	鼻子
+bi ci	彼此
+bi sai	比賽
+bi yao	必要
+bi ye	畢業
+bi wo	比我
+bian ma	編碼
+bian de	變得
+bian tai	變態
+bian geng	變更
+bian hua	變化
+bian hao	編號
+bian ji	編輯
+bian xie	編寫
+bian zhi	編制
+bian cheng	變成 編程
+bian shi	便是
+biao mian	表面
+biao ming	表明
+biao da	表達
+biao ti	標題
+biao ge	表格
+biao qian	標籤
+biao qing	表情
+biao xian	表現
+biao zhun	標準
+biao zhi	標誌
+biao shi	表示
+biao yan	表演
+bie de	別的
+bie ren	別人
+bin guan	賓館
+bing bu	並不
+bing fei	並非
+bing du	病毒
+bing qie	並且
+bing ren	病人
+bing zai	並在
+bo fang	播放
+bo li	玻璃
+bo ke	博客
+bo shi	博士
+bu bi	不必
+bu pa	不怕
+bu man	不滿
+bu men	部門
+bu fen	部分
+bu duan	不斷
+bu da	不大
+bu dan	不但
+bu dao	不到
+bu de	不得
+bu ding	補丁
+bu dong	不懂
+bu duo	不多
+bu dui	不對 部隊
+bu tai	不太
+bu tie	補貼
+bu ting	不停
+bu tong	不同
+bu neng	不能
+bu lai	不來
+bu liao	不了
+bu guan	不管
+bu guai	不乖
+bu gan	不敢
+bu gao	不高
+bu gei	不給
+bu gou	不夠
+bu guo	不過
+bu kan	不看
+bu ke	不可
+bu ken	不肯
+bu hao	不好
+bu hui	不會
+bu jian	不見
+bu jin	不僅
+bu jiu	不久
+bu ju	佈局
+bu qi	不起
+bu qu	不去
+bu xiang	不想 不像
+bu xin	不信
+bu xing	不行 不幸
+bu zhun	不準
+bu zhang	部長
+bu zhi	不知 不止
+bu zhou	步驟
+bu zhu	不住
+bu chang	補償
+bu cheng	不成
+bu chong	補充
+bu chu	不出
+bu shuang	不爽
+bu shang	不上
+bu shao	不少
+bu shi	不是
+bu shu	部署
+bu shuo	不說
+bu ran	不然
+bu rang	不讓
+bu ru	不如
+bu zai	不再 不在
+bu zu	不足
+bu zuo	不做
+bu cuo	不錯
+bu suan	不算
+bu yuan	不願
+bu yao	不要
+bu yong	不用
+bu wei	部位
+pai ming	排名
+pai dui	排隊
+pai chu	排除
+pai she	拍攝
+pai zi	牌子
+pan duan	判斷
+pang bian	旁邊
+pang zi	胖子
+pao dao	跑到
+peng dao	碰到
+pei fu	佩服
+pei tao	配套
+pei he	配合
+pei jian	配件
+pei xun	培訓
+pei zhi	配置
+pei chang	賠償
+pei yang	培養
+pi ping	批評
+pi fu	皮膚
+pi gu	屁股
+pi jiu	啤酒
+pi qi	脾氣
+pi zhun	批准
+pian zi	片子 騙子
+pian yi	便宜
+piao liang	漂亮
+pin pai	品牌
+pin ming	拼命
+pin fan	頻繁
+pin dao	頻道
+pin lv	頻率
+pin zhi	品質
+pin zhong	品種
+pin yin	拼音
+ping mu	屏幕
+ping deng	平等
+ping tai	平臺
+ping lun	評論
+ping gu	評估
+ping guo	蘋果
+ping heng	平衡
+ping jun	平均
+ping jia	評價
+ping jie	憑藉
+ping jing	平靜
+ping chang	平常
+ping shi	平時
+po huai	破壞
+po jie	破解
+pu bian	普遍
+pu tong	普通
+ma ma	媽媽
+ma fan	麻煩
+ma jia	馬甲
+ma shang	馬上
+mai mai	買賣
+mai de	買的
+mai le	買了
+mai ge	買個
+mai ru	買入
+man man	慢慢
+man hua	漫畫
+man zu	滿足
+man yi	滿意
+mao bing	毛病
+mao dun	矛盾
+mao si	貌似
+mao yi	貿易
+men kou	門口
+meng xiang	夢想
+mei mei	妹妹
+mei fa	沒法
+mei de	沒得
+mei ti	媒體
+mei tian	每天
+mei nv	美女
+mei nian	每年
+mei le	沒了
+mei li	美麗 魅力
+mei ge	每個
+mei guo	美國
+mei hao	美好
+mei qian	沒錢
+mei zhou	每週
+mei sha	沒啥
+mei shi	沒事
+mei ren	沒人 美人 每人
+mei ri	每日
+mei ci	每次
+mei cuo	沒錯
+mei yuan	美元
+mei yue	每月
+mei you	沒有
+mei yong	沒用
+mi ma	密碼
+mi mi	祕密
+mi lan	米蘭
+mian fei	免費
+mian dui	面對
+mian lin	面臨
+mian ji	面積
+mian qian	面前
+mian xiang	面向
+mian shi	面試
+mian zi	面子
+miao shu	描述
+min gan	敏感
+min jian	民間
+min zhong	民衆
+min zhu	民主
+min zu	民族
+ming bai	明白
+ming ming	明明
+ming dan	名單
+ming nian	明年
+ming ling	命令
+ming que	明確
+ming xian	明顯
+ming xing	明星
+ming cheng	名稱
+ming zi	名字
+ming yun	命運
+mo ban	模板
+mo mo	默默
+mo ni	模擬
+mo kuai	模塊
+mo hu	模糊
+mo xing	模型
+mo sheng	陌生
+mo shi	模式
+mo shou	魔獸
+mo ren	默認
+mou ge	某個
+mou xie	某些
+mou zhong	某種
+mu biao	目標
+mu di	目的
+mu lu	目錄
+mu guang	目光
+mu qian	目前
+mu qin	母親
+mu shi	牧師
+fa biao	發表
+fa bu	發佈
+fa piao	發票
+fa fang	發放
+fa da	發達
+fa lv	法律
+fa gei	發給
+fa guo	法國
+fa huo	發貨
+fa hui	發揮
+fa xian	發現
+fa xing	發行
+fa zhan	發展
+fa chu	發出
+fa sheng	發生
+fa shi	法師
+fa song	發送
+fa yuan	法院
+fa yan	發言
+fan fu	反覆
+fan dian	飯店
+fan dui	反對
+fan tan	反彈
+fan nao	煩惱
+fan kui	反饋
+fan hui	返回
+fan zheng	反正
+fan zui	犯罪
+fan yi	翻譯
+fan ying	反映 反應
+fan wei	範圍
+fan er	反而
+fang bian	方便
+fang mian	方面
+fang fa	方法
+fang fu	彷彿
+fang dao	放到
+fang jia	房價 放假
+fang jian	房間
+fang qi	放棄
+fang xiang	方向
+fang xin	放心
+fang zhi	防止
+fang chan	房產
+fang shi	方式
+fang shou	防守
+fang ru	放入
+fang zai	放在
+fang zi	房子
+fang song	放鬆
+fang yu	防禦
+fang wen	訪問
+fang wu	房屋
+fang an	方案
+fen bie	分別
+fen bu	分佈
+fen pei	分配
+fen fen	紛紛
+fen dou	奮鬥
+fen lei	分類
+fen li	分離
+fen kai	分開
+fen xi	分析
+fen xiang	分享
+fen zhong	分鐘
+fen shou	分手
+fen shu	分數
+fen zi	分子
+fen si	粉絲
+fen wei	分爲 氛圍
+feng fu	豐富
+feng ge	風格
+feng kuang	瘋狂
+feng jing	風景
+feng xian	風險
+fei fa	非法
+fei hua	廢話
+fei ji	飛機
+fei chang	非常
+fei yong	費用
+fou ren	否認
+fou ze	否則
+fu bai	腐敗
+fu ben	副本
+fu mu	父母
+fu dan	負擔
+fu du	幅度
+fu nv	婦女
+fu gai	覆蓋
+fu kuan	付款
+fu he	符合
+fu jian	附件 福建
+fu jin	附近
+fu qi	夫妻
+fu qin	父親
+fu xi	複習
+fu zhuang	服裝
+fu zhi	複製
+fu zhou	福州
+fu chu	付出
+fu ren	夫人
+fu za	複雜
+fu ze	負責
+fu you	富有
+fu wu	服務
+duan lian	鍛鍊
+duan kou	端口
+duan qi	短期
+duan xian	短線
+duan xin	短信
+da pan	大盤
+da pei	搭配
+da po	打破
+da fu	大幅 答覆
+da da	大大
+da dao	達到
+da de	大的
+da duo	大多
+da li	大力
+da lian	大連
+da liang	大量
+da lu	大陸
+da gai	大概
+da ge	大哥
+da gong	打工
+da kai	打開
+da hui	大會
+da ji	打擊
+da jia	大家
+da qiu	打球
+da xue	大學
+da xiao	大小
+da xing	大型
+da zhong	大衆
+da cheng	達成
+da sha	大廈
+da shi	大師
+da ren	大人
+da zao	打造
+da zi	打字
+da suan	打算
+da sai	大賽
+da yue	大約
+da yin	打印
+da ying	答應
+da yu	大於
+da an	答案
+dai biao	代表
+dai ma	代碼
+dai dong	帶動
+dai lai	帶來
+dai li	代理
+dai ling	帶領
+dai kuan	貸款
+dai jia	代價
+dai zhe	帶着
+dai you	帶有
+dai yu	待遇
+dan du	單獨
+dan ta	但他
+dan xin	擔心
+dan chun	單純
+dan shi	但是
+dan ren	擔任
+dan zai	但在
+dan yuan	單元
+dan wei	單位
+dan wo	但我
+dang de	黨的
+dang di	當地
+dang tian	當天
+dang ni	當你
+dang nian	當年
+dang qian	當前
+dang zhong	當中
+dang chu	當初
+dang shi	當時
+dang ran	當然
+dang zuo	當作
+dang yuan	黨員
+dang wo	當我
+dang an	檔案
+dao da	到達
+dao de	道德
+dao di	到底
+dao lai	到來
+dao le	到了
+dao li	道理
+dao lu	道路
+dao qian	道歉
+dao zhi	導致
+dao chu	到處
+dao shi	倒是 到時 導師
+dao ru	導入
+dao yan	導演
+dao wei	到位
+de dao	得到
+de duo	得多
+de le	得了
+de lian	的臉
+de guo	德國
+de hua	的話
+de hen	得很
+de qian	的錢
+de xin	的新 的心
+de zhi	得知
+de shi	的事 的是
+de shuo	地說
+de ren	的人
+de yi	得以
+deng dai	等待
+deng dao	等到
+deng deng	等等
+deng ni	等你
+deng lu	登錄 登陸
+deng ji	等級 登記
+deng zhe	等着
+deng yu	等於
+deng wo	等我
+di mian	地面
+di fang	地方
+di di	弟弟
+di dian	地點
+di diao	低調
+di tie	地鐵
+di tu	地圖
+di que	的確
+di qiu	地球
+di qu	地區
+di xia	地下
+di zhen	地震
+di zhi	地址
+di chan	地產
+di shang	地上
+di ren	敵人
+di san	第三
+di si	第四
+di yi	第一
+di yu	低於
+di wei	地位
+di er	第二
+dian li	電力
+dian hua	電話
+dian ji	點擊
+dian xin	電信
+dian xing	典型
+dian chi	電池
+dian shi	電視
+dian zi	電子
+dian yuan	電源
+dian ying	電影
+diao cha	調查
+diao yan	調研
+diao yong	調用
+ding dan	訂單
+ding qi	定期
+ding yi	定義
+ding wei	定位
+dou bei	都被
+dou bu	都不
+dou mei	都沒
+dou neng	都能
+dou hen	都很
+dou hui	都會
+dou shi	都是
+dou shuo	都說
+dou zai	都在
+dou yao	都要
+dou you	都有
+dong bei	東北
+dong fang	東方
+dong de	懂得
+dong dong	東東
+dong tai	動態
+dong tian	冬天
+dong li	動力
+dong guan	東莞
+dong hua	動畫
+dong xi	東西
+dong zuo	動作
+dong wu	動物
+du te	獨特
+du li	獨立
+du zhe	讀者
+du shu	讀書
+du zi	肚子
+duo me	多麼
+duo da	多大
+duo duo	多多
+duo nian	多年
+duo le	多了
+duo ge	多個
+duo jiu	多久
+duo xie	多謝
+duo zhong	多種
+duo shao	多少
+duo shu	多數
+duo ci	多次
+dui bi	對比
+dui mian	對面
+dui fang	對方
+dui dai	對待
+dui ta	對他
+dui ni	對你
+dui le	對了
+dui hua	對話
+dui huan	兌換
+dui qi	對其
+dui xiang	對象
+dui zhang	隊長
+dui zhe	對着
+dui shou	對手
+dui ci	對此
+dui yuan	隊員
+dui ying	對應
+dui yu	對於
+dui wai	對外
+dui wo	對我
+dui wu	隊伍
+tuan dui	團隊
+ta ma	他媽
+ta men	他們 她們 它們
+ta de	他的 她的 它的
+ta jiu	他就
+ta shi	他是 它是
+ta shuo	他說 她說
+ta ren	他人
+ta zai	他在
+ta ye	他也
+tai da	太大
+tai du	態度
+tai duo	太多
+tai yang	太陽
+tai wan	臺灣
+tan pan	談判
+tan tao	探討
+tan suo	探索
+tang zai	躺在
+tao bao	淘寶
+tao lun	討論
+tao yan	討厭
+te bie	特別
+te dian	特點
+te ding	特定
+te xing	特性
+te zheng	特徵
+te shu	特殊
+te se	特色
+ti mu	題目
+ti dao	提到
+ti nei	體內
+ti gao	提高
+ti gong	提供
+ti hui	體會
+ti jiao	提交
+ti qian	提前
+ti xi	體系
+ti xian	體現
+ti xing	提醒
+ti zhi	體制
+ti chu	提出
+ti sheng	提升
+ti shi	提示
+ti cai	題材
+ti yan	體驗
+ti yu	體育
+tian fu	天賦
+tian di	天地
+tian tang	天堂
+tian tian	天天
+tian kong	天空
+tian jia	添加
+tian jin	天津
+tian qi	天氣
+tian xia	天下
+tian xie	填寫
+tian shi	天使
+tian ran	天然
+tian ya	天涯
+tiao jian	條件
+tiao jie	調節
+tiao zhan	挑戰
+tiao zheng	調整
+tiao shi	調試
+tie lu	鐵路
+tie zi	帖子
+ting dao	聽到
+ting ting	聽聽
+ting liu	停留
+ting guo	聽過
+ting hao	挺好
+ting jian	聽見
+ting zhi	停止
+ting shuo	聽說
+tou piao	投票
+tou ming	透明
+tou fa	頭髮
+tou tou	偷偷
+tou lu	透露
+tou xiang	頭像
+tou shang	頭上
+tou ru	投入
+tou zi	投資
+tou su	投訴
+tong bu	同步
+tong dao	通道
+tong guo	通過
+tong ku	痛苦
+tong ji	統計
+tong xue	同學
+tong xun	通訊
+tong xin	通信
+tong zhi	通知 同志
+tong chang	通常
+tong shi	同時 同事
+tong yang	同樣
+tong yi	統一 同意 同一
+tong yong	通用
+tu biao	圖標
+tu pian	圖片
+tu po	突破
+tu di	土地
+tu jing	途徑
+tu xiang	圖像
+tu chu	突出
+tu ran	突然
+tu zi	兔子
+tuo zhan	拓展
+tui dong	推動
+tui guang	推廣
+tui jian	推薦
+tui jin	推進
+tui chu	推出 退出
+nv de	女的
+nv hai	女孩
+nv xing	女性
+nv sheng	女生
+nv shi	女士
+nv ren	女人
+nv zi	女子
+nv you	女友
+nv er	女兒
+na bian	那邊
+na pa	哪怕
+na me	那麼
+na dao	拿到
+na tian	那天 哪天
+na li	哪裏 那裏
+na ge	那個 哪個
+na jiu	那就
+na xie	那些 哪些
+na zhe	拿着
+na zhong	那種
+na chu	拿出
+na shi	那是 那時
+na yang	那樣
+na you	哪有
+na er	哪兒 那兒
+nai nai	奶奶
+nai xin	耐心
+nan fang	南方
+nan dao	難道
+nan de	難得
+nan du	難度
+nan nv	男女
+nan guai	難怪
+nan guo	難過
+nan hai	男孩
+nan jing	南京
+nan xing	男性
+nan sheng	男生
+nan shou	難受
+nan ren	男人
+nan zi	男子
+nan yi	難以
+nan you	男友
+nao dai	腦袋
+nao zi	腦子
+neng fou	能否
+neng li	能力
+neng liang	能量
+neng gou	能夠
+neng yuan	能源
+nei bian	那邊
+nei bu	內部
+nei di	內地
+nei tian	那天
+nei xin	內心
+nei zhong	那種
+nei rong	內容
+nei cun	內存
+ni bu	你不
+ni ma	你媽
+ni de	你的
+ni neng	你能
+ni kan	你看
+ni hai	你還
+ni hao	你好
+ni hui	你會
+ni jia	你家
+ni jiu	你就
+ni xiang	你想
+ni shi	你是
+ni shuo	你說
+ni zai	你在
+ni yao	你要
+ni ye	你也
+ni you	你有
+nian dai	年代
+nian de	年的
+nian di	年底
+nian du	年度
+nian ling	年齡
+nian ji	年紀
+nian qian	年前
+nian qing	年輕
+nin de	您的
+nin hao	您好
+ning bo	寧波
+niu nai	牛奶
+niu yue	紐約
+nong min	農民
+nong cun	農村
+nong ye	農業
+nu li	努力
+lun tan	論壇
+lun wen	論文
+lv xing	履行 旅行
+lv shi	律師
+lv se	綠色
+lv you	旅遊
+la ji	垃圾
+lai dao	來到
+lai de	來的
+lai le	來了
+lai kan	來看
+lai jiang	來講
+lai shuo	來說
+lai zi	來自
+lai yuan	來源
+lan mu	欄目
+lan de	懶得
+lan se	藍色
+lang man	浪漫
+lang fei	浪費
+lao ba	老爸
+lao ban	老闆
+lao po	老婆
+lao da	老大
+lao dong	勞動
+lao nian	老蔫
+lao gong	老公
+lao hu	老虎
+lao ren	老人
+lao zi	老子
+le ma	了嗎
+le guan	樂觀
+le qu	樂趣
+leng jing	冷靜
+lei ji	累計
+lei xing	類型
+lei si	類似
+li bai	禮拜
+li mian	裏面
+li du	力度
+li nian	理念
+li lun	理論
+li lv	利率
+li liang	力量
+li kai	離開
+li ke	立刻
+li hun	離婚
+li hai	厲害
+li ji	立即
+li jie	理解
+li xiang	理想
+li xing	理性
+li chang	立場
+li shi	歷史
+li run	利潤
+li ru	例如
+li zi	例子
+li cai	理財
+li yi	利益
+li you	理由
+li yong	利用
+li yu	利於
+li wu	禮物
+lian meng	聯盟
+lian tong	聯通
+lian he	聯合
+lian jie	鏈接 連接
+lian xi	聯繫 練習
+lian xiang	聯想
+lian xu	連續
+lian shang	臉上
+lian sai	聯賽
+lian ai	戀愛
+liao tian	聊天
+liao liao	聊聊
+liao jie	瞭解
+liang tian	兩天
+liang nian	兩年
+liang ge	兩個
+liang guo	兩國
+liang hao	良好
+liang zhe	兩者
+liang zhong	兩種
+liang shi	糧食
+liang ren	兩人
+liang ci	兩次
+liang wei	兩位
+lie biao	列表
+lie ren	獵人
+lin chuang	臨牀
+lin shi	臨時
+ling dao	領導
+ling hun	靈魂
+ling huo	靈活
+ling xian	領先
+ling chen	凌晨
+ling ren	令人
+ling yi	另一
+ling yu	領域
+ling wai	另外
+liu mang	流氓
+liu dong	流動
+liu lan	瀏覽
+liu liang	流量
+liu xia	留下
+liu xing	流行
+liu cheng	流程
+liu zai	留在
+liu yan	留言
+lou pan	樓盤
+lou xia	樓下
+lou zhu	樓主
+lou shang	樓上
+lu guo	路過
+lu jing	路徑
+lu xian	路線
+lu shang	路上
+luo hou	落後
+luo ji	邏輯
+luo shi	落實
+guan bi	關閉
+guan fang	官方
+guan dian	觀點
+guan nian	觀念
+guan li	管理
+guan kan	觀看
+guan jun	冠軍
+guan ji	關機
+guan jian	關鍵
+guan xi	關係
+guan xin	關心
+guan zhong	觀衆
+guan zhu	關注
+guan cha	觀察
+guan shui	灌水
+guan yuan	官員
+guan yu	關於
+guang pan	光盤
+guang fan	廣泛
+guang da	廣大
+guang dong	廣東
+guang gao	廣告
+guang xi	廣西
+guang zhou	廣州
+guang chang	廣場
+guai guai	乖乖
+ga ga	嘎嘎
+gai bian	改變
+gai nian	概念
+gai ge	改革
+gai jin	改進
+gai cheng	改成
+gai shan	改善
+gai zao	改造
+gai wei	改爲
+gan bu	幹部
+gan ma	幹嘛 幹嗎
+gan mao	感冒
+gan dao	感到
+gan dong	感動
+gan ga	尷尬
+gan kuai	趕快
+gan huo	幹活
+gan jue	感覺
+gan jin	趕緊
+gan jing	乾淨
+gan qing	感情
+gan xie	感謝
+gan sha	幹啥
+gan shou	感受
+gan ran	感染
+gan cui	乾脆
+gang gang	剛剛
+gang hao	剛好
+gang cai	剛纔
+gang wei	崗位
+gao duan	高端
+gao da	高達
+gao de	搞得
+gao ding	搞定
+gao du	高度
+gao kao	高考
+gao ji	高級
+gao jian	稿件
+gao xiao	高校 搞笑
+gao xing	高興
+gao zhi	告知
+gao zhong	高中
+gao shou	高手
+gao ceng	高層
+gao su	告訴 高速
+gao yu	高於
+ge bie	個別
+ge men	哥們
+ge ming	革命
+ge da	各大
+ge di	各地
+ge lei	各類
+ge ge	哥哥 各個
+ge gu	個股
+ge ji	各級
+ge ju	格局
+ge qu	歌曲
+ge xiang	各項
+ge xing	個性
+ge zhong	各種
+ge shi	格式
+ge shou	歌手
+ge ren	個人
+ge zi	各自
+ge ci	歌詞
+ge yue	個月
+ge wei	各位
+gen ben	根本
+gen ta	跟他
+gen ni	跟你
+gen ju	根據
+gen zhe	跟着
+gen zong	跟蹤
+gen wo	跟我
+geng da	更大
+geng duo	更多
+geng gai	更改
+geng huan	更換
+geng hao	更好
+geng jia	更加
+geng xin	更新
+geng shi	更是
+geng you	更有
+geng wei	更爲
+gei ta	給他 給她
+gei ni	給你
+gei le	給了
+gei chu	給出
+gei ren	給人
+gei yu	給予
+gei wo	給我
+gou mai	購買
+gou tong	溝通
+gou jian	構建
+gou cheng	構成
+gou wu	購物
+gong bu	公佈
+gong ping	公平
+gong min	公民
+gong fu	功夫
+gong tong	共同
+gong neng	功能
+gong li	公里
+gong lu	公路
+gong gao	公告
+gong gong	公共
+gong kai	公開
+gong hui	工會
+gong ji	攻擊
+gong ju	工具
+gong xi	恭喜
+gong xian	貢獻
+gong xiang	共享
+gong zhong	公衆
+gong zhu	公主
+gong chang	工廠
+gong cheng	工程
+gong ren	工人
+gong zi	工資 公子
+gong si	公司
+gong yuan	公園
+gong ye	工業
+gong yi	工藝
+gong ying	供應
+gong you	共有
+gu piao	股票
+gu fen	股份
+gu dai	古代
+gu ding	固定
+gu dong	股東
+gu du	孤獨
+gu niang	姑娘
+gu li	鼓勵
+gu ke	顧客
+gu ji	估計
+gu jia	股價
+gu quan	股權
+gu zhang	故障
+gu shi	故事 股市
+gu yi	故意
+guo fen	過分
+guo du	過度
+guo duo	過多
+guo nei	國內
+guo lai	過來
+guo le	過了
+guo ji	國際
+guo jia	國家
+guo qing	國慶
+guo qu	過去
+guo chan	國產
+guo cheng	過程
+guo ran	果然
+guo yu	過於
+guo wai	國外
+gui mo	規模
+gui fan	規範
+gui ding	規定
+gui lv	規律
+gui ge	規格
+gui hua	規劃
+gui ze	規則
+kua zhang	誇張
+kuan dai	寬帶
+kuang jia	框架
+kun ming	昆明
+kun nan	困難
+kuai di	快遞
+kuai dian	快點
+kuai le	快樂
+kuai ji	會計
+kuai qian	塊錢
+kuai su	快速
+ka fei	咖啡
+kai fa	開發
+kai fang	開放
+kai tong	開通
+kai hui	開會
+kai ji	開機
+kai qi	開啓
+kai xue	開學
+kai xin	開心
+kai zhan	開展
+kai che	開車
+kai shi	開始
+kan fa	看法
+kan dao	看到
+kan de	看得
+kan ni	看你
+kan lai	看來
+kan le	看了
+kan guo	看過
+kan kan	看看
+kan hao	看好
+kan jian	看見
+kan zhe	看着
+kan chu	看出
+kan shu	看書
+kan wan	看完
+kao lv	考慮
+kao he	考覈
+kao cha	考察
+kao sheng	考生
+kao shi	考試
+kao yan	考研 考驗
+ke pa	可怕
+ke fu	客服
+ke neng	可能
+ke lian	可憐
+ke guan	客觀
+ke kao	可靠
+ke hu	客戶
+ke ji	科技
+ke jian	可見
+ke qi	客氣
+ke xue	科學
+ke xi	可惜
+ke cheng	課程
+ke shi	可是
+ke ren	客人
+ke wang	渴望
+ke ai	可愛
+ken ding	肯定
+kong bu	恐怖
+kong pa	恐怕
+kong tiao	空調
+kong jian	空間
+kong ju	恐懼
+kong qi	空氣
+kong zhi	控制
+ku zi	褲子
+ku cun	庫存
+kuo da	擴大
+kuo zhan	擴展
+hua mian	畫面
+hua fei	話費
+hua ti	話題
+hua qian	花錢
+hua xue	化學
+hua shuo	話說
+hua yuan	花園
+hua wei	華爲
+huan bao	環保
+huan jie	環節
+huan jing	環境
+huan xiang	幻想
+huan zhe	患者
+huan ying	歡迎
+huang di	皇帝
+huang jin	黃金
+huang se	黃色
+hun luan	混亂
+hun li	婚禮
+hun yin	婚姻
+huai nian	懷念
+huai yun	懷孕
+huai yi	懷疑
+ha ha	哈哈
+hai bu	還不
+hai pa	害怕
+hai mei	還沒
+hai de	還得
+hai nan	海南
+hai neng	還能
+hai hao	還好
+hai hui	還會
+hai jiang	還將
+hai xiang	還想
+hai xing	還行
+hai zhen	還真
+hai shi	還是
+hai shuo	還說
+hai zai	還在
+hai zi	孩子
+hai yang	海洋
+hai yao	還要
+hai you	還有
+hai wai	海外
+han liang	含量
+han guo	韓國
+han shu	函數
+han you	含有
+hang kong	航空
+hang qing	行情
+hang zhou	杭州
+hang ye	行業
+hao ba	好吧
+hao ma	號碼 好嗎
+hao de	好的
+hao duo	好多
+hao ting	好聽
+hao le	好了
+hao kan	好看
+hao hao	好好
+hao jiu	好久
+hao qi	好奇
+hao xiang	好像 好象
+hao chi	好喫
+hao chu	好處
+hao shi	好事
+hao ren	好人
+hao you	好友
+hao wan	好玩
+hao wu	毫無
+hao a	好啊
+he bei	河北
+he bing	合併
+he ping	和平
+he fa	合法
+he ta	和他
+he tong	合同
+he nan	河南
+he ni	和你
+he li	合理
+he ge	合格
+he he	呵呵
+he jiu	喝酒
+he xie	和諧
+he xin	核心
+he shi	合適 何時
+he zuo	合作
+he wo	和我
+hen bu	很不
+hen da	很大
+hen duo	很多
+hen nan	很難
+hen gao	很高
+hen kuai	很快
+hen hao	很好
+hen jiu	很久
+hen qiang	很強
+hen xiao	很小
+hen shao	很少
+hen you	很有
+hei hei	嘿嘿
+hei se	黑色
+hei an	黑暗
+hou mian	後面
+hou tai	後臺
+hou tian	後天
+hou lai	後來
+hou guo	後果
+hou hui	後悔
+hou qi	後期
+hou xu	後續
+hou zhe	後者
+hong bao	紅包
+hong se	紅色
+hu bei	湖北
+hu dong	互動
+hu nan	湖南
+hu lue	忽略
+hu kou	戶口
+hu xi	呼吸
+hu xiang	互相
+hu ran	忽然
+hu you	忽悠
+huo bi	貨幣
+huo de	獲得
+huo dong	活動
+huo li	活力
+huo jian	火箭
+huo qu	獲取
+huo xu	或許
+huo zhe	或者 活着
+huo che	火車
+huo shi	或是
+huo yue	活躍
+huo wu	貨物
+hui bao	回報 彙報
+hui bei	會被
+hui fu	回覆 恢復
+hui da	回答
+hui dao	回到
+hui tou	回頭
+hui lai	回來
+hui guo	回國
+hui gui	迴歸
+hui jia	回家
+hui qu	回去
+hui shi	回事
+hui zai	會在
+hui yuan	會員
+hui yi	會議 回憶
+hui you	會有
+jue bu	絕不
+jue de	覺得
+jue ding	決定
+jue dui	絕對
+jue xin	決心
+jue ce	決策
+jue se	角色
+jun dui	軍隊
+jun shi	軍事
+ji bai	幾百
+ji ben	基本
+ji bian	即便
+ji bie	級別
+ji bing	疾病
+ji piao	機票
+ji mo	寂寞
+ji fang	機房
+ji fen	積分
+ji fu	肌膚
+ji da	極大
+ji dan	雞蛋
+ji de	記得
+ji di	基地
+ji dian	幾點
+ji dong	激動
+ji tuan	集團
+ji ti	集體
+ji tian	幾天
+ji nan	濟南
+ji neng	技能
+ji nian	幾年 紀念
+ji lei	積累
+ji lie	激烈
+ji lu	記錄
+ji guan	機關
+ji ge	幾個
+ji gou	機構
+ji ke	即可
+ji hua	計劃
+ji he	集合
+ji hu	幾乎
+ji huo	激活
+ji hui	機會
+ji ji	積極
+ji jiang	即將
+ji jie	季節
+ji jin	基金
+ji qi	機器 及其 極其
+ji qiao	技巧
+ji qing	激情
+ji xie	機械
+ji xu	繼續
+ji zhang	幾張
+ji zhe	記者
+ji zhi	機制
+ji zhong	集中
+ji zhu	記住
+ji chang	機場
+ji cheng	集成
+ji chu	基礎
+ji shi	即使 及時 幾十
+ji shu	技術
+ji ran	既然
+ji zi	機子
+ji ceng	基層
+ji ci	幾次
+ji suan	計算
+ji yi	記憶
+ji yu	基於 給予
+jia ban	加班
+jia meng	加盟
+jia da	加大
+jia ting	家庭
+jia li	家裏
+jia ge	價格
+jia gou	架構
+jia gong	加工
+jia kuai	加快
+jia huo	傢伙
+jia ju	傢俱
+jia qi	假期
+jia qian	價錢
+jia qiang	加強
+jia xiang	家鄉
+jia zhang	家長
+jia zhi	價值
+jia shang	加上
+jia ren	家人
+jia ru	加入 假如
+jia zu	家族
+jia su	加速
+jia yi	加以
+jia you	加油
+jia wei	價位
+jian mian	見面
+jian fei	減肥
+jian dan	簡單
+jian dao	見到
+jian ding	鑑定
+jian du	監督
+jian li	建立 簡歷
+jian guan	監管
+jian guo	見過
+jian kang	健康
+jian kong	監控
+jian jue	堅決
+jian jian	漸漸
+jian jie	簡介
+jian qiang	堅強
+jian zhi	簡直 兼職
+jian zhu	建築
+jian cha	檢查
+jian cheng	建成
+jian chi	堅持
+jian shao	減少
+jian she	建設
+jian ce	檢測 監測
+jian yan	檢驗
+jian yi	建議
+jiao ben	腳本
+jiao da	較大
+jiao dian	焦點
+jiao du	角度
+jiao duo	較多
+jiao tong	交通
+jiao lian	教練
+jiao liu	交流
+jiao gao	較高
+jiao gei	交給
+jiao huan	交換
+jiao xue	教學
+jiao che	轎車
+jiao cheng	教程
+jiao shi	教師
+jiao shou	教授
+jiao zuo	叫做
+jiao cai	教材
+jiao yi	交易
+jiao yu	教育
+jiao wang	交往
+jiao wei	較爲
+jiao wo	叫我
+jiang di	降低
+jiang nan	江南
+jiang lai	將來
+jiang li	獎勵
+jiang hua	講話
+jiang hu	江湖
+jiang hui	將會
+jiang jun	將軍
+jiang jia	降價
+jiang jin	獎金
+jiang qi	將其
+jiang xi	江西
+jiang shu	講述
+jiang zai	將在
+jiang su	江蘇
+jie mian	界面
+jie mu	節目
+jie duan	階段
+jie dao	接到 街道
+jie dian	節點
+jie lun	結論
+jie gou	結構
+jie guo	結果
+jie kou	接口
+jie hun	結婚
+jie he	結合
+jie jue	解決
+jie jie	姐姐
+jie jin	接近
+jie ju	結局
+jie zhe	接着
+jie chu	接觸
+jie shao	介紹
+jie shi	解釋
+jie shou	接受 接收
+jie shu	結束
+jie ri	節日
+jin bu	進步
+jin du	進度
+jin nian	今年
+jin lai	進來
+jin liang	儘量
+jin guan	儘管
+jin gong	進攻
+jin kuai	儘快
+jin kou	進口
+jin hou	今後
+jin ji	緊急
+jin jin	僅僅
+jin qi	近期
+jin qian	金錢
+jin qu	進去
+jin xing	進行
+jin zhan	進展
+jin zhang	緊張
+jin zhi	禁止
+jin cheng	進程
+jin shu	金屬
+jin ri	今日 近日
+jin rong	金融
+jin ru	進入
+jin wan	今晚
+jin e	金額
+jing pin	精品
+jing fang	警方
+jing dian	經典
+jing tou	鏡頭
+jing li	經歷 經理 精力
+jing ling	精靈
+jing guo	經過
+jing ji	經濟
+jing xi	驚喜
+jing zheng	競爭
+jing cha	警察
+jing chang	經常
+jing ran	竟然
+jing cai	精彩
+jing yan	經驗
+jing ying	經營 精英
+jiu ba	就把 酒吧
+jiu bu	就不
+jiu mei	就沒
+jiu dian	酒店
+jiu neng	就能
+jiu hao	就好
+jiu hui	就會
+jiu jing	究竟
+jiu qu	就去
+jiu xiang	就像
+jiu xing	就行
+jiu shi	就是
+jiu shuo	就說
+jiu zai	就在
+jiu suan	就算
+jiu yao	就要
+jiu ye	就業
+jiu you	就有
+ju ban	舉辦
+ju bao	舉報
+ju bei	具備
+ju mian	局面
+ju min	居民
+ju da	巨大
+ju ti	具體
+ju li	距離
+ju hui	聚會
+ju jue	拒絕
+ju qing	劇情
+ju xing	舉行
+ju zhang	局長
+ju zhu	居住
+ju shuo	據說
+ju ran	居然
+ju you	具有
+quan bu	全部
+quan mian	全面
+quan ti	全體
+quan li	權利 權力
+quan guo	全國
+quan qiu	全球
+quan xian	權限
+quan xin	全新
+quan shen	全身
+quan sheng	全省
+quan shi	全市 全是
+quan wei	權威
+que bao	確保
+que fa	缺乏
+que dian	缺點
+que ding	確定
+que xian	缺陷
+que shao	缺少
+que shi	確實 卻是
+que ren	確認
+qun ti	羣體
+qun zhong	羣衆
+qi ma	起碼
+qi fen	氣氛
+qi fu	欺負
+qi dai	期待
+qi dao	起到
+qi dong	啓動
+qi ta	其他 其它
+qi lai	起來
+qi guai	奇怪
+qi ji	奇蹟
+qi jian	期間
+qi xian	期限
+qi zhi	氣質
+qi zhong	其中
+qi chuang	起牀
+qi che	汽車
+qi shi	其實 騎士
+qi zi	妻子
+qi ye	企業
+qi yu	其餘
+qi wang	期望
+qian mian	前面
+qian ming	簽名
+qian ding	簽訂
+qian ti	前提
+qian tu	前途
+qian li	潛力
+qian hou	前後
+qian jing	前景
+qian qi	前期
+qian zheng	簽證
+qian wan	千萬
+qian wang	前往
+qiang da	強大
+qiang diao	強調
+qiang lie	強烈
+qiang hua	強化
+qie shi	切實
+qin qi	親戚
+qin shi	寢室
+qin zi	親自
+qin ai	親愛
+qing dao	青島
+qing ni	請你
+qing nian	青年
+qing nin	請您
+qing li	清理
+qing gan	情感
+qing kuang	情況
+qing jiao	請教
+qing jie	情節
+qing qing	輕輕
+qing qiu	請求
+qing xi	清晰
+qing xiang	傾向
+qing xu	情緒
+qing chun	青春
+qing chu	清楚 清除
+qing ren	情人
+qing song	輕鬆
+qing yi	輕易
+qing wen	請問
+qiu mi	球迷
+qiu dui	球隊
+qiu yuan	球員
+qu ba	去吧
+qu bie	區別
+qu dao	渠道
+qu de	取得
+qu diao	去掉
+qu dong	驅動
+qu nian	去年
+qu le	去了
+qu guo	去過
+qu kan	去看
+qu xiao	取消
+qu shi	趨勢
+qu zuo	去做
+qu yu	區域
+xuan bu	宣佈
+xuan xiang	選項
+xuan chuan	宣傳
+xuan shou	選手
+xuan ze	選擇
+xue ke	學科
+xue hui	學會
+xue xi	學習
+xue xiao	學校
+xue zhe	學者
+xue shu	學術
+xue yuan	學院 學員
+xun lei	迅雷
+xun lian	訓練
+xun huan	循環
+xun qiu	尋求
+xun zhao	尋找
+xun su	迅速
+xun wen	詢問
+xi bao	細胞
+xi bu	西部
+xi fang	西方
+xi tong	系統
+xi lie	系列
+xi guan	習慣
+xi jie	細節
+xi xi	嘻嘻
+xi sheng	犧牲
+xi shou	吸收
+xi zang	西藏
+xi zao	洗澡
+xi yin	吸引
+xi wang	希望
+xi ai	喜愛
+xi an	西安
+xia ban	下班
+xia men	廈門
+xia mian	下面
+xia die	下跌
+xia tian	夏天
+xia lai	下來
+xia le	下了
+xia jiang	下降
+xia qu	下去
+xia zhou	下週
+xia zai	下載
+xia ci	下次
+xia yu	下雨
+xia wu	下午
+xian mu	羨慕
+xian dai	現代
+xian de	顯得
+xian lu	線路
+xian ka	顯卡
+xian hou	先後
+xian jin	先進 現金
+xian xiang	現象
+xian zhuang	現狀
+xian zhe	顯着
+xian zhi	限制
+xian chang	現場
+xian sheng	先生
+xian shi	顯示 現實
+xian ran	顯然
+xian ru	陷入
+xian you	現有
+xiao fei	消費
+xiao de	曉得
+xiao lv	效率
+xiao liang	銷量
+xiao guo	效果
+xiao hua	笑話
+xiao hai	小孩
+xiao hao	消耗 小號
+xiao jie	小姐
+xiao qu	小區
+xiao xue	小學
+xiao xi	消息
+xiao xiao	小小
+xiao xin	小心
+xiao zhang	校長
+xiao chu	消除
+xiao shi	小時 消失
+xiao shou	銷售
+xiao shuo	小說
+xiao rong	笑容
+xiao zi	小子
+xiao zu	小組
+xiao yuan	校園
+xiao yi	效益
+xiao ying	效應
+xiang bi	相比
+xiang mu	項目
+xiang fa	想法
+xiang dang	相當
+xiang dao	想到
+xiang dui	相對
+xiang tong	相同
+xiang guan	相關
+xiang gang	香港
+xiang hu	相互
+xiang ji	相機
+xiang qi	想起
+xiang qu	想去
+xiang xi	詳細
+xiang xiang	想想 想像
+xiang xin	相信
+xiang zhe	想着
+xiang shou	享受
+xiang ce	相冊
+xiang si	相似
+xiang yao	想要
+xiang ying	相應
+xie de	寫的
+xie tiao	協調
+xie le	寫了
+xie hui	協會
+xie xie	謝謝
+xie zhu	協助
+xie zi	鞋子
+xie zuo	寫作
+xie yi	協議
+xin pian	芯片
+xin de	新的
+xin tai	心態
+xin lang	新浪
+xin li	心裏 心理
+xin ling	心靈
+xin ku	辛苦
+xin hao	信號
+xin jian	新建
+xin jiang	新疆
+xin qing	心情
+xin xi	信息
+xin xian	新鮮
+xin xin	信心
+xin xing	新型
+xin zhong	心中
+xin shang	欣賞
+xin ren	信任 新人
+xin zeng	新增
+xing ming	姓名
+xing fen	興奮
+xing fu	幸福
+xing dong	行動
+xing neng	性能
+xing gan	性感
+xing ge	性格
+xing hao	型號
+xing qi	星期
+xing qu	興趣
+xing xiang	形象
+xing xing	星星
+xing zheng	行政
+xing zhi	性質
+xing cheng	形成
+xing shi	形式 形勢
+xing yun	幸運
+xing wei	行爲
+xiong di	兄弟
+xiu fu	修復
+xiu gai	修改
+xiu xi	休息
+xiu xian	休閒
+xu duo	許多
+xu ni	虛擬
+xu qiu	需求
+xu yao	需要
+zhua zhu	抓住
+zhuan bian	轉變
+zhuan men	專門
+zhuan ti	專題
+zhuan huan	轉換
+zhuan ji	專輯
+zhuan jia	專家
+zhuan qian	賺錢
+zhuan rang	轉讓
+zhuan zai	轉載
+zhuan ye	專業
+zhuan yi	轉移
+zhuan yong	專用
+zhuang bei	裝備
+zhuang tai	狀態
+zhuang kuang	狀況
+zhuang xiu	裝修
+zhuang zhi	裝置
+zhuang shi	裝飾
+zhun bei	準備
+zhun que	準確
+zhan dian	站點
+zhan dou	戰鬥
+zhan tie	粘貼
+zhan lue	戰略
+zhan kai	展開
+zhan xian	展現
+zhan zheng	戰爭
+zhan chang	戰場
+zhan shi	戰士 展示
+zhan zai	站在
+zhang fu	丈夫
+zhang da	長大
+zhang de	長得
+zhang ting	漲停
+zhang hao	帳號
+zhang hu	賬戶
+zhang jia	漲價
+zhang wo	掌握
+zhang ai	障礙
+zhao pian	照片
+zhao pin	招聘
+zhao dao	找到
+zhao ni	找你
+zhao ge	找個
+zhao gu	照顧
+zhao kai	召開
+zhao ji	着急
+zhao zhao	找找
+zhao shang	招商
+zhao shou	招收
+zhao wo	找我
+zhe bian	這邊
+zhe bu	這部
+zhe me	這麼
+zhe fen	這份
+zhe duan	這段
+zhe dian	這點
+zhe teng	折騰
+zhe lei	這類
+zhe li	這裏
+zhe ge	這個
+zhe kuan	這款
+zhe jiang	浙江
+zhe jiu	這就
+zhe xue	哲學
+zhe xiang	這項
+zhe xie	這些
+zhe zhang	這張
+zhe zhong	這種
+zhe chang	這場
+zhe shi	這是 這時
+zhe ci	這次
+zhe yang	這樣
+zhe ye	這也
+zhe yi	這一
+zhe wei	這位
+zhe er	這兒
+zhen duan	診斷
+zhen dui	針對
+zhen xi	珍惜
+zhen zheng	真正
+zhen cheng	真誠
+zhen shi	真是 真實
+zheng ban	正版
+zheng mian	正面
+zheng ming	證明
+zheng fu	政府
+zheng ti	整體
+zheng tian	整天
+zheng li	整理
+zheng ge	整個
+zheng hao	正好
+zheng he	整合
+zheng ju	證據
+zheng quan	證券
+zheng que	正確
+zheng qu	爭取
+zheng zhuang	症狀
+zheng zhi	政治
+zheng zhou	鄭州
+zheng chang	正常
+zheng shi	正式 正是 證實
+zheng shu	證書
+zheng zai	正在
+zheng ce	政策
+zheng yi	爭議
+zhi biao	指標
+zhi ming	知名
+zhi fu	支付
+zhi dao	知道 指導 直到
+zhi de	值得
+zhi ding	制定 指定
+zhi du	制度
+zhi neng	只能 智能
+zhi nei	之內
+zhi lei	之類
+zhi li	治理
+zhi liao	治療
+zhi liang	質量
+zhi gong	職工
+zhi hao	只好
+zhi hou	之後
+zhi hui	智慧 只會 指揮
+zhi jian	之間
+zhi jie	直接
+zhi jin	至今
+zhi qian	之前
+zhi xia	之下
+zhi xing	執行
+zhi zhong	之中
+zhi cheng	支撐
+zhi chi	支持
+zhi chu	指出 之處 支出
+zhi shao	至少
+zhi shi	只是 知識
+zhi shu	指數
+zhi zao	製造
+zhi ze	職責
+zhi zuo	製作
+zhi yao	只要
+zhi ye	職業
+zhi yi	之一 質疑
+zhi you	只有
+zhi yu	至於
+zhi wai	之外
+zhi wei	職位
+zhi wu	植物 職務
+zhou bian	周邊
+zhou mo	週末
+zhou liu	週六
+zhou qi	週期
+zhou ri	週日
+zhou yi	週一
+zhou wei	周圍
+zhou wu	週五
+zhong duan	終端
+zhong da	重大
+zhong de	中的
+zhong dian	重點
+zhong du	中毒
+zhong duo	衆多
+zhong gong	中共
+zhong guo	中國
+zhong hua	中華
+zhong jian	中間
+zhong xue	中學
+zhong xin	中心
+zhong zhong	種種
+zhong shi	重視
+zhong ren	衆人
+zhong zi	種子
+zhong yang	中央
+zhong yao	重要
+zhong yi	中醫
+zhong you	中有
+zhong yu	終於
+zhong wu	中午
+zhu ban	主板
+zhu bu	逐步
+zhu ming	著名 註明
+zhu fang	住房
+zhu fu	祝福
+zhu dong	主動
+zhu duo	諸多
+zhu ti	主題 主體
+zhu tou	豬頭
+zhu li	主力
+zhu liu	主流
+zhu guan	主管
+zhu ji	主機
+zhu jian	逐漸
+zhu xi	主席
+zhu zhai	住宅
+zhu zhong	注重
+zhu chi	主持
+zhu ren	主任 主人
+zhu zai	住在
+zhu ce	註冊
+zhu yao	主要
+zhu yi	注意
+zhuo mian	桌面
+zhuo zi	桌子
+zhui qiu	追求
+chuan bo	傳播
+chuan di	傳遞
+chuan tong	傳統
+chuan zhe	穿着
+chuan zhen	傳真
+chuan shu	傳輸
+chuan shuo	傳說
+chuang kou	窗口
+chuang jian	創建
+chuang xin	創新
+chuang shang	牀上
+chuang zao	創造
+chuang zuo	創作
+chuang ye	創業
+chuang yi	創意
+chun tian	春天
+chun jie	春節
+chun cui	純粹
+cha bie	差別
+cha dian	差點
+cha kan	查看
+cha jian	插件
+cha ju	差距
+cha xun	查詢
+cha zhao	查找
+cha ru	插入
+cha yi	差異
+chan pin	產品
+chan liang	產量
+chan sheng	產生
+chan ye	產業
+chang du	長度
+chang ge	唱歌
+chang jia	廠家
+chang jian	常見
+chang jing	場景
+chang qi	長期
+chang chang	常常
+chang sha	長沙
+chang shang	廠商
+chang shi	嘗試
+chang yong	常用
+chao gu	炒股
+chao guo	超過
+chao ji	超級
+chao jia	吵架
+chao xian	朝鮮
+chao shi	超市
+chao zuo	炒作
+chao yue	超越
+che di	徹底
+che liang	車輛
+che xing	車型
+che zi	車子
+chen mo	沉默
+cheng ben	成本
+cheng fen	成分
+cheng dan	承擔
+cheng du	程度 成都
+cheng nuo	承諾
+cheng le	成了
+cheng li	成立
+cheng gong	成功
+cheng guo	成果
+cheng ji	成績
+cheng jiao	成交
+cheng jiu	成就
+cheng xian	呈現
+cheng xu	程序
+cheng zhang	成長
+cheng shi	城市
+cheng shou	承受
+cheng shu	成熟
+cheng ren	承認 成人
+cheng yuan	成員
+cheng wei	成爲 稱爲
+chi le	喫了
+chi xu	持續
+chi cun	尺寸
+chi you	持有
+chi wan	喫完
+chong man	充滿
+chong fen	充分
+chong fu	重複
+chong dong	衝動
+chong tu	衝突
+chong ji	衝擊
+chong qi	重啓
+chong qing	重慶
+chong xin	重新
+chong zu	重組
+chong wu	寵物
+chu ban	出版
+chu bu	初步
+chu men	出門
+chu fa	出發 處罰
+chu fang	廚房
+chu fei	除非
+chu tai	出臺
+chu lai	出來
+chu le	除了 出了
+chu li	處理
+chu guo	出國
+chu kou	出口
+chu qu	出去 除去
+chu xi	出席
+chu xian	出現
+chu zhong	初中
+chu chai	出差
+chu sheng	出生
+chu shou	出售
+chu se	出色
+chu yu	處於 出於
+shuang fang	雙方
+shuang shou	雙手
+shun bian	順便
+shun li	順利
+shun jian	瞬間
+shun xu	順序
+shuai ge	帥哥
+sha fa	沙發
+sha ren	殺人
+sha zi	啥子
+shan dong	山東
+shan liang	善良
+shan xi	山西 陝西
+shan chu	刪除
+shang ban	上班
+shang pin	商品
+shang mian	上面
+shang de	上的
+shang di	上帝
+shang lai	上來
+shang le	上了
+shang liang	商量
+shang ke	上課
+shang hai	上海 傷害
+shang jia	商家
+shang qu	上去
+shang xue	上學
+shang xia	上下
+shang xian	上線
+shang xin	傷心
+shang zhang	上漲
+shang zhou	上週
+shang chuan	上傳
+shang chang	商場
+shang sheng	上升
+shang shi	上市
+shang shu	上述
+shang ci	上次
+shang ye	商業
+shang you	上有
+shang wang	上網
+shang wei	尚未
+shang wu	上午 商務
+shao deng	稍等
+shao nv	少女
+shao nian	少年
+shao wei	稍微
+she bei	設備
+she ding	設定
+she li	設立
+she hui	社會
+she ji	設計 涉及
+she qu	社區
+she zhi	設置
+she shi	設施
+she ying	攝影
+shen bao	申報
+shen bian	身邊
+shen pi	審批
+shen me	什麼
+shen mi	神祕
+shen fen	身份
+shen du	深度
+shen ti	身體
+shen ke	深刻
+shen he	審覈
+shen ji	審計
+shen jing	神經
+shen qi	神奇
+shen qing	申請
+shen zhen	深圳
+shen zhi	甚至
+shen cha	審查
+shen shang	身上
+shen shen	深深
+shen ru	深入
+shen cai	身材
+sheng ming	生命 聲明
+sheng tai	生態
+sheng li	勝利
+sheng huo	生活
+sheng ji	升級
+sheng qi	生氣
+sheng xia	剩下
+sheng zhang	生長
+sheng chan	生產
+sheng cheng	生成
+sheng ri	生日
+sheng cun	生存
+sheng yi	生意
+sheng yin	聲音
+sheng wu	生物
+shi ba	是吧
+shi bai	失敗
+shi bie	識別
+shi bu	是不
+shi pin	視頻 食品
+shi ma	是嗎
+shi min	市民
+shi fang	釋放
+shi fen	十分
+shi fou	是否
+shi fu	師傅
+shi da	十大
+shi dai	時代
+shi dang	適當
+shi de	使得 似的
+shi dui	是對
+shi ti	屍體
+shi tou	石頭
+shi tu	試圖
+shi nei	室內
+shi ni	是你
+shi nian	十年
+shi li	實力
+shi guang	時光
+shi ge	是個
+shi gong	施工
+shi gu	事故
+shi ke	時刻
+shi hua	實話
+shi he	適合
+shi hen	是很
+shi hou	時候
+shi ji	實際 世紀 十幾 時機
+shi jian	時間 事件 實踐
+shi jie	世界
+shi qi	時期
+shi qing	事情
+shi qu	失去 市區
+shi xi	實習
+shi xian	實現
+shi xiang	事項
+shi xing	實行
+shi zhang	市長
+shi zhi	是指
+shi zhong	始終
+shi chang	市場
+shi shang	時尚
+shi shi	實施 事實 試試
+shi shui	是誰
+shi ren	詩人
+shi zai	實在 是在
+shi zui	是最
+shi cong	是從
+shi ya	是呀
+shi yan	實驗 試驗
+shi yao	是要
+shi ye	事業
+shi yi	十一 是以
+shi ying	適應
+shi you	石油 是由 是有
+shi yong	使用 適用 實用
+shi wang	失望
+shi wo	是我
+shi wu	食物 事物 事務
+shi a	是啊
+shou fei	收費
+shou duan	手段
+shou dao	收到 受到
+shou li	手裏
+shou gou	收購
+shou huo	收穫
+shou quan	授權
+shou qu	收取
+shou xian	首先
+shou xu	手續
+shou zhi	手指
+shou zhong	手中
+shou shang	受傷 手上
+shou shi	收拾
+shou shu	手術
+shou ru	收入
+shou cang	收藏
+shou ci	首次
+shou ye	首頁
+shou yi	收益
+shu biao	鼠標
+shu ma	數碼
+shu fu	舒服
+shu liang	數量
+shu ji	書記
+shu jia	暑假
+shu ju	數據
+shu xue	數學
+shu xi	熟悉
+shu xing	屬性
+shu chu	輸出
+shu shu	叔叔
+shu ru	輸入
+shu zi	數字
+shu cai	蔬菜
+shu yu	屬於
+shuo ming	說明
+shuo fa	說法
+shuo dao	說道
+shuo de	說的 說得
+shuo le	說了
+shuo guo	說過
+shuo hua	說話
+shuo shi	說是
+shuo shuo	說說
+shui ping	水平
+shui mian	睡眠
+shui guo	水果
+shui jiao	睡覺
+ruan jian	軟件
+ran hou	然後
+ran er	然而
+rang ta	讓他 讓她
+rang ni	讓你
+rang ren	讓人
+rang wo	讓我
+re dian	熱點
+re nao	熱鬧
+re qing	熱情
+ren men	人們
+ren min	人民
+ren de	人的
+ren ding	認定
+ren dou	人都
+ren ti	人體
+ren tong	認同
+ren lei	人類
+ren gong	人工
+ren ke	認可
+ren kou	人口
+ren he	任何
+ren jia	人家
+ren qun	人羣
+ren qi	人氣
+ren xing	人性
+ren zhen	認真
+ren zheng	認證
+ren sheng	人生
+ren shi	認識 人士 人事
+ren shu	人數
+ren cai	人才
+ren yuan	人員
+ren wei	認爲
+ren wu	任務 人物
+reng ran	仍然
+ri ben	日本
+ri ji	日記
+ri qi	日期
+ri qian	日前
+ri zhi	日誌
+ri chang	日常
+ri zi	日子
+ri yi	日益
+rong liang	容量
+rong he	融合
+rong yi	容易
+rong yu	榮譽
+ru tong	如同
+ru guo	如果
+ru he	如何
+ru jin	如今
+ru xia	如下
+ru ci	如此
+zun zhong	尊重
+zun shou	遵守
+za zhi	雜誌
+zai fa	再發
+zai na	在哪
+zai nei	在內
+zai lai	再來
+zai jia	在家
+zai jian	再見
+zai qu	再去
+zai xian	在線
+zai zhe	在這
+zai shuo	再說
+zai ci	再次 在此
+zai ye	再也
+zai yu	在於
+zai wo	在我
+zan men	咱們
+zan shi	暫時
+zao dao	遭到
+zao dian	早點
+zao jiu	早就
+zao qi	早期
+zao xing	造型
+zao chen	早晨
+zao cheng	造成
+zao shang	早上
+zao yi	早已
+zao yu	遭遇
+ze shi	則是
+ze ren	責任
+zen me	怎麼
+zen yang	怎樣
+zeng jia	增加
+zeng qiang	增強
+zeng zhang	增長
+zi ben	資本
+zi mu	字母
+zi dong	自動
+zi ti	字體
+zi nv	子女
+zi liao	資料
+zi ge	資格
+zi jue	自覺
+zi ji	自己
+zi jin	資金
+zi xun	諮詢 資訊
+zi xi	仔細
+zi xin	自信
+zi xing	自行
+zi chan	資產
+zi sha	自殺
+zi shen	自身
+zi ran	自然
+zi cong	自從
+zi yuan	資源
+zi you	自由
+zi wo	自我
+zou dao	走到
+zou le	走了
+zou guo	走過
+zou jin	走進
+zou xiang	走向
+zou chu	走出
+zou shi	走勢
+zong bu	總部
+zong ti	總體
+zong tong	總統
+zong li	總理
+zong he	綜合
+zong jie	總結
+zong zhi	總之
+zong shi	總是
+zong cai	總裁
+zu gou	足夠
+zu guo	祖國
+zu he	組合
+zu qiu	足球
+zu zhi	組織
+zu cheng	組成
+zu yi	足以
+zuo bian	左邊
+zuo pin	作品
+zuo fa	做法
+zuo fan	做飯
+zuo dao	做到
+zuo de	做的 做得
+zuo tian	昨天
+zuo le	做了
+zuo ge	做個
+zuo guo	做過
+zuo hao	做好
+zuo jia	作家
+zuo zhan	作戰
+zuo zhe	作者
+zuo chu	作出 做出
+zuo shi	做事
+zuo ri	昨日
+zuo zai	坐在
+zuo ye	作業
+zuo you	左右
+zuo yong	作用
+zuo wan	昨晚 做完
+zuo wei	作爲
+zui da	最大
+zui di	最低
+zui duo	最多
+zui gao	最高
+zui hao	最好
+zui hou	最後
+zui jia	最佳
+zui jin	最近
+zui xin	最新
+zui zhong	最終
+zui chu	最初
+zui wei	最爲
+zui ai	最愛
+cun min	村民
+cun dang	存檔
+cun chu	存儲
+cun zai	存在
+cai fang	採訪
+cai fu	財富
+cai dan	菜單
+cai neng	才能
+cai liao	材料
+cai gou	採購
+cai hui	纔會
+cai qu	採取
+cai zheng	財政
+cai chan	財產
+cai shi	纔是
+cai you	纔有
+cai yong	採用
+cai wu	財務
+can ting	餐廳
+can guan	參觀
+can kao	參考
+can jia	參加
+can shu	參數
+can yu	參與
+cang ku	倉庫
+cao zuo	操作
+ce lue	策略
+ce liang	測量
+ce hua	策劃
+ce shi	測試
+ce suo	廁所
+ceng mian	層面
+ceng jing	曾經
+ceng ci	層次
+ci ji	刺激
+ci zhi	辭職
+ci shi	此時 此事
+ci shu	次數
+ci ci	此次
+cong ming	聰明
+cong lai	從來
+cong xiao	從小
+cong shi	從事
+cong ci	從此
+cong er	從而
+cu jin	促進
+cu xiao	促銷
+cuo guo	錯過
+cuo shi	措施
+cuo wu	錯誤
+suan fa	算法
+suan le	算了
+suan shi	算是
+sun hai	損害
+sun shi	損失
+san da	三大
+san tian	三天
+san nian	三年
+san ge	三個
+san xing	三星
+san shi	三是
+sao miao	掃描
+se cai	色彩
+si nian	四年
+si le	死了
+si lu	思路
+si ge	四個
+si kao	思考
+si hu	似乎
+si ji	司機
+si xiang	思想
+si chuan	四川
+si ren	私人
+si wang	死亡
+si wei	思維
+sou suo	搜索
+song dao	送到
+song gei	送給
+su du	速度
+su zhi	素質
+su zhou	蘇州
+su she	宿舍
+suo xu	所需
+suo shuo	所說
+suo zai	所在
+suo yi	所以
+suo you	所有
+suo wei	所謂
+sui bian	隨便
+sui de	歲的
+sui hou	隨後
+sui ji	隨機
+sui zhe	隨着
+sui shi	隨時
+sui ran	雖然
+sui yue	歲月
+sui yi	隨意
+yuan ben	原本
+yuan lai	原來
+yuan li	原理
+yuan liao	原料
+yuan gong	員工
+yuan chuang	原創
+yuan cheng	遠程
+yuan shi	原始
+yuan ze	原則
+yuan su	元素
+yuan yuan	遠遠
+yuan yi	願意
+yuan yin	原因
+yuan you	原有
+yuan wang	願望
+yue fen	月份
+yue di	月底
+yue ding	約定
+yue du	閱讀
+yue liang	月亮
+yun dao	暈倒
+yun dong	運動
+yun nan	雲南
+yun qi	運氣
+yun xing	運行
+yun xu	允許
+yun shu	運輸
+yun zuo	運作
+yun si	暈死
+yun ying	運營
+yun yong	運用
+ya tou	丫頭
+ya li	壓力
+ya zhou	亞洲
+ya suo	壓縮
+yan fa	研發
+yan lun	言論
+yan lei	眼淚
+yan li	眼裏
+yan guang	眼光
+yan ge	嚴格
+yan jing	眼睛 眼鏡
+yan jiu	研究
+yan qian	眼前
+yan zheng	驗證
+yan zhong	嚴重
+yan chu	演出
+yan shen	眼神
+yan se	顏色
+yan yuan	演員
+yang guang	陽光
+yang shi	央視
+yang zi	樣子
+yao ba	要把
+yao bu	要不
+yao pin	藥品
+yao me	要麼
+yao ming	姚明
+yao kan	要看
+yao qing	邀請
+yao qiu	要求
+yao qu	要去
+yao xiang	要想
+yao shi	要是 鑰匙
+yao zai	要在
+yao zuo	要做
+yao you	要有
+yao yong	要用
+yao wu	藥物
+ye bu	也不
+ye mei	也沒
+ye mian	頁面
+ye neng	也能
+ye ke	也可
+ye hao	也好
+ye hen	也很
+ye hui	也會
+ye ji	業績
+ye jiang	也將
+ye jiu	也就
+ye xing	也行
+ye xu	也許
+ye zhu	業主
+ye shi	也是
+ye zai	也在
+ye yao	也要
+ye ye	爺爺
+ye you	也有
+ye wu	業務
+yi ba	一把
+yi ban	一般 一半
+yi ben	一本
+yi bian	一邊 一遍 以便
+yi bu	一部 一步
+yi pi	一批
+yi pian	一片 一篇
+yi mian	一面
+yi min	移民
+yi ming	一名
+yi fa	依法
+yi fan	一番
+yi fang	一方
+yi fen	一份
+yi fu	衣服
+yi duan	一段
+yi dun	一頓
+yi da	一大
+yi dai	一代
+yi dan	一旦
+yi dao	一道
+yi dian	一點
+yi ding	一定
+yi dong	移動
+yi dui	一堆 一對
+yi tai	一臺
+yi tao	一套
+yi tian	一天
+yi tiao	一條
+yi nian	一年
+yi lai	以來 依賴
+yi lang	伊朗
+yi liao	醫療
+yi liang	一輛
+yi lu	一路
+yi ge	一個
+yi gen	一根
+yi gong	一共
+yi gu	一股
+yi kuan	一款
+yi kuai	一塊
+yi kan	一看
+yi kao	依靠
+yi ke	一顆
+yi kou	一口
+yi han	遺憾
+yi hou	以後
+yi hui	一會 一回
+yi ji	以及 一級
+yi jia	一家
+yi jian	意見 一件
+yi jing	已經
+yi jiu	依舊
+yi ju	一句 依據
+yi qun	一羣
+yi qi	一起
+yi qian	以前
+yi qie	一切
+yi xia	一下 以下
+yi xiang	一項 一向
+yi xie	一些
+yi zhang	一張
+yi zhen	一陣
+yi zhi	一直 一隻 一致 一支 抑制
+yi zhou	一週
+yi zhong	一種
+yi chang	一場 異常
+yi shang	以上
+yi shen	一身
+yi sheng	醫生 一聲 一生
+yi shi	意識 一是 一時
+yi shou	一首
+yi shu	藝術
+yi ran	依然
+yi ren	一人
+yi zuo	一座
+yi ceng	一層
+yi ci	一次
+yi si	意思
+yi yuan	醫院 億元
+yi yan	一眼
+yi yang	一樣
+yi yi	意義
+yi you	已有
+yi wai	意外 以外
+yi wang	以往
+yi wen	疑問
+yi wei	以爲 一位 意味
+yi wu	義務
+yin fa	引發
+yin dao	引導
+yin du	印度
+yin hang	銀行
+yin jin	引進
+yin qi	引起
+yin xiang	印象
+yin shen	隱身
+yin shi	飲食
+yin cang	隱藏
+yin ci	因此
+yin su	因素
+yin yue	音樂
+yin yong	引用
+yin wei	因爲
+yin er	因而
+ying pan	硬盤
+ying pian	影片
+ying dang	應當
+ying de	贏得
+ying dui	應對
+ying li	盈利
+ying gai	應該
+ying guo	英國
+ying jian	硬件
+ying xiao	營銷
+ying xiang	影響
+ying xiong	英雄
+ying zi	影子
+ying yang	營養
+ying yong	應用
+ying yu	英語
+ying wen	英文
+you bian	右邊
+you de	有的
+you dian	有點 優點
+you le	有了
+you li	有力
+you guan	有關
+you ge	有個
+you guo	有過
+you ke	遊客
+you kong	有空
+you hua	優化
+you huo	誘惑
+you hui	優惠
+you jian	郵件
+you qi	尤其
+you qian	有錢
+you qu	有趣
+you xi	遊戲
+you xian	有限 優先
+you xiao	有效
+you xiang	郵箱
+you xie	有些
+you xiu	優秀
+you xu	有序
+you zhe	有着
+you zhi	優質
+you shi	優勢 有時 又是 有事
+you ren	有人
+you ci	由此
+you suo	有所
+you yao	又要
+you you	又有
+you yong	游泳 有用
+you yu	由於
+you wang	有望
+yong lai	用來
+yong guo	用過
+yong hu	用戶
+yong qi	勇氣
+yong yuan	永遠
+yong you	擁有
+yong yu	用於
+yu men	鬱悶
+yu mi	玉米
+yu ming	域名
+yu fang	預防
+yu dao	遇到
+yu le	娛樂
+yu kuai	愉快
+yu ji	預計
+yu qi	預期
+yu shi	於是
+yu ce	預測
+yu suan	預算
+yu yan	語言
+yu yi	予以
+yu yin	語音
+yu wang	慾望
+wa wa	娃娃
+wai bu	外部
+wai mian	外面
+wai di	外地
+wai guan	外觀
+wai guo	外國
+wai zi	外資
+wan bi	完畢
+wan mei	完美
+wan le	完了
+wan jia	玩家
+wan quan	完全
+wan xiao	玩笑
+wan zheng	完整
+wan cheng	完成
+wan shan	完善
+wan shang	晚上
+wan yuan	萬元
+wan yi	萬一
+wan wan	玩玩
+wan an	晚安
+wang ba	網吧
+wang min	網民
+wang tong	網通
+wang le	忘了
+wang luo	網絡
+wang ji	忘記
+wang zhan	網站
+wang zhi	網址
+wang shang	網上
+wang zi	王子
+wang ye	網頁
+wang you	網友
+wang wang	往往
+wen ben	文本
+wen ming	文明
+wen dang	文檔
+wen ding	穩定
+wen du	溫度
+wen ti	問題
+wen nuan	溫暖
+wen ni	問你
+wen hua	文化
+wen jian	文件
+wen xue	文學
+wen zhang	文章
+wen rou	溫柔
+wen zi	文字
+wen wen	問問
+wen wo	問我
+wei bi	未必
+wei fa	違法
+wei fan	違反
+wei da	偉大
+wei dao	味道
+wei tuo	委託
+wei ni	爲你
+wei lai	未來
+wei le	爲了
+wei hai	危害
+wei he	爲何
+wei hu	維護
+wei ji	危機
+wei xian	危險
+wei xiao	微笑
+wei xie	威脅
+wei xiu	維修
+wei zhi	位置 爲止
+wei zhu	爲主
+wei chi	維持
+wei sha	爲啥
+wei sheng	衛生
+wei ruan	微軟
+wei rao	圍繞
+wei ci	爲此
+wei yi	唯一
+wei yu	位於
+wo ba	我把
+wo bu	我不
+wo ma	我媽
+wo mei	我沒
+wo de	我的
+wo dou	我都
+wo dui	我對
+wo guo	我國
+wo kan	我看
+wo hai	我還
+wo he	我和
+wo hen	我很
+wo jia	我家
+wo jiu	我就
+wo qu	我去
+wo xiang	我想
+wo sheng	我省
+wo shi	我是 我市
+wo shuo	我說
+wo zai	我在
+wo yao	我要
+wo ye	我也
+wo you	我有 我又
+wu bi	無比
+wu pin	物品
+wu fa	無法
+wu di	無敵
+wu tai	舞臺
+wu nai	無奈
+wu nian	五年
+wu lun	無論
+wu li	物理
+wu liao	無聊
+wu liu	物流
+wu guan	無關
+wu han	武漢
+wu qi	武器
+wu xian	無線 無限
+wu zhi	物質
+wu shu	無數
+wu ran	污染
+wu ren	無人
+wu yi	五一 無疑
+wu yu	無語
+a yi	阿姨
+ai ni	愛你
+ai qing	愛情
+ai shang	愛上
+ai ya	哎呀
+an pai	安排
+an mo	按摩
+an niu	按鈕
+an li	案例
+an hui	安徽
+an jian	案件
+an jing	安靜
+an quan	安全
+an zhuang	安裝
+an zhao	按照
+an wei	安慰
+ao yun	奧運
+e lie	惡劣
+e xin	噁心
+er bu	而不
+er duo	耳朵
+er tong	兒童
+er ji	耳機
+er qie	而且
+er shi	而是 二是 二十
+er zai	而在
+er zi	兒子
+er yan	而言
+er yi	而已
+ou xiang	偶像
+ou zhou	歐洲
+ou er	偶爾
+ban gong shi	辦公室
+bei jing shi	北京市
+bi ji ben	筆記本
+bi jiao hao	比較好
+bi ye sheng	畢業生
+bing bu shi	並不是
+bu de bu	不得不
+bu jin jin	不僅僅
+ping fang mi	平方米
+mao ze dong	毛澤東
+mei guan xi	沒關係
+mei ge ren	每個人
+mei guo ren	美國人
+mei shen me	沒什麼
+fa dong ji	發動機
+fang di chan	房地產
+fang huo qiang	防火牆
+fen gong si	分公司
+fu ze ren	負責人
+fu wu qi	服務器
+da bu fen	大部分
+da dian hua	打電話
+da duo shu	大多數
+da gui mo	大規模
+da xue sheng	大學生
+dang shi ren	當事人
+de bo ke	的博客
+de yi zhong	的一種
+di yi ci	第一次
+di er tian	第二天
+di er ci	第二次
+dian shi tai	電視臺
+dian shi ju	電視劇
+dong shi zhang	董事長
+duo shao qian	多少錢
+dui bu qi	對不起
+tou zi zhe	投資者
+tu shu guan	圖書館
+nv peng you	女朋友
+nv hai zi	女孩子
+na jiu shi	那就是
+nan peng you	男朋友
+ni bu shi	你不是
+nian qing ren	年輕人
+nuo ji ya	諾基亞
+lao bai xing	老百姓
+lian he guo	聯合國
+liang ge ren	兩個人
+liu lan qi	瀏覽器
+guan li yuan	管理員
+guang dong sheng	廣東省
+gai gong si	該公司
+gan xing qu	感興趣
+gan shen me	幹什麼
+geng duo de	更多的
+geng hao de	更好的
+gong cheng shi	工程師
+gong ying shang	供應商
+gong wu yuan	公務員
+guo nei wai	國內外
+guo wu yuan	國務院
+kai fa shang	開發商
+kai wan xiao	開玩笑
+kan bu dao	看不到
+kan qi lai	看起來
+kan shang qu	看上去
+ke neng xing	可能性
+ke hu duan	客戶端
+ke xue jia	科學家
+ke yi yong	可以用
+ha ha ha	哈哈哈
+hai bu shi	還不是
+hao bu hao	好不好
+he he he	呵呵呵
+hen bu cuo	很不錯
+hen da de	很大的
+hen duo ren	很多人
+hen hao de	很好的
+hen jian dan	很簡單
+hen xi huan	很喜歡
+hen zhong yao	很重要
+hen rong yi	很容易
+hu lian wang	互聯網
+hui bu hui	會不會
+ji ben shang	基本上
+ji ge yue	幾個月
+ji suan ji	計算機
+jia na da	加拿大
+jie xia lai	接下來
+jin nian lai	近年來
+jin yi bu	進一步
+jing xiao shang	經銷商
+jing zheng li	競爭力
+ju le bu	俱樂部
+quan shi jie	全世界
+qi ta ren	其他人
+qian ji tian	前幾天
+xian dai hua	現代化
+xian shi qi	顯示器
+xiao fei zhe	消費者
+xiao hai zi	小孩子
+xiao shi hou	小時候
+xin jia po	新加坡
+xin xi hua	信息化
+xin yong ka	信用卡
+zhe me duo	這麼多
+zhe liang tian	這兩天
+zhe liang ge	這兩個
+zhe ge ren	這個人
+zhe ji tian	這幾天
+zhe ju hua	這句話
+zhe ye shi	這也是
+zhen de hen	真的很
+zhi bu guo	只不過
+zhi fu bao	支付寶
+zhi suo yi	之所以
+zhong guo ren	中國人
+zhu chi ren	主持人
+cha bu duo	差不多
+chang shi jian	長時間
+chu li qi	處理器
+shang ban nian	上半年
+shang hai shi	上海市
+she xiang tou	攝像頭
+shen me yang	什麼樣
+shen fen zheng	身份證
+shen zhen shi	深圳市
+shi bu shi	是不是
+shi ji shang	實際上
+shi jie bei	世界盃
+shi yan shi	實驗室
+shi yi zhong	是一種
+shou bu liao	受不了
+shu ju ku	數據庫
+shu ru fa	輸入法
+shuo bu ding	說不定
+ren bu zhu	忍不住
+ren min bi	人民幣
+ri ben ren	日本人
+zen me ban	怎麼辦
+zen me yang	怎麼樣
+zi xing che	自行車
+zong jing li	總經理
+zuo shen me	做什麼
+zui da de	最大的
+zui hao de	最好的
+cai zhi dao	才知道
+yue lai yue	越來越
+yun ying shang	運營商
+yan jiu sheng	研究生
+yan jiu suo	研究所
+yan zheng ma	驗證碼
+yan chang hui	演唱會
+yao bu yao	要不要
+yi bei zi	一輩子
+yi da li	意大利
+yi dian dian	一點點
+yi la ke	伊拉克
+yi hui er	一會兒
+yi ju hua	一句話
+yi xi lie	一系列
+yi xia zi	一下子
+yi wei zhe	意味着
+ying xiang li	影響力
+you bu shi	又不是
+you mei you	有沒有
+you xie ren	有些人
+you shi hou	有時候
+you yi tian	有一天
+you yi zhong	有一種
+yong hu ming	用戶名
+wen jian jia	文件夾
+wei shen me	爲什麼
+wei yuan hui	委員會
+wo ye shi	我也是
+wu suo wei	無所謂
+ao yun hui	奧運會
+e luo si	俄羅斯
+er bu shi	而不是
+bu hao yi si	不好意思
+mei you shen me	沒有什麼
+mei you ren he	沒有任何
+de ji chu shang	的基礎上
+ling yi fang mian	另一方面
+gao su ji zhe	告訴記者
+gong zuo ren yuan	工作人員
+ke yi tong guo	可以通過
+ha ha ha ha	哈哈哈哈
+hui fu ri qi	回覆日期
+jue de zi ji	覺得自己
+jie jue fang an	解決方案
+jing ji fa zhan	經濟發展
+zhe ge wen ti	這個問題
+zhe shi yi ge	這是一個
+shang shi gong si	上市公司
+she hui zhu yi	社會主義
+shen me shi hou	什麼時候
+shen me yi si	什麼意思
+ren min zheng fu	人民政府
+zui zhong yao de	最重要的
+cao zuo xi tong	操作系統
+cong lai mei you	從來沒有
+yue lai yue duo	越來越多
+ye bu zhi dao	也不知道
+yi duan shi jian	一段時間
+you guan bu men	有關部門
+you guan gui ding	有關規定
+you xian gong si	有限公司
+yu yan wen ming	語言文明
+ao da li ya	澳大利亞
