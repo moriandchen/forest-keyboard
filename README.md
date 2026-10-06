@@ -1,13 +1,24 @@
 # 🌲 Forest Keyboard
 
-Android 输入法项目：给习惯 iPhone 输入体验的繁中拼音用户一把顺手的 Android 键盘。
+原生 Android 系統輸入法，繁體拼音優先。測試機：Huawei nova 5T。
 
-## V0.1 · Touch Prototype
-- Android 系统 IME 骨架
-- QWERTY 字母键盘
-- 繁中常用标点
-- 计算器式 1–9 数字九宫格
-- 空格左右滑动移动游标
-- 干净浅色 UI
+## V0.9.1 · 輸入手感更新
 
-这一阶段先验证手感。繁体拼音候选、个人词频学习、中英无痛混输、Forest Bar 完整功能将在下一阶段接入。
+- 詞庫、前綴索引預熱與候選生成在單一背景執行緒執行；快速按鍵合併查詢。
+- 查詢結果檢查版本與 composing，過期結果不更新畫面。
+- 手指按住候選時延後更新；舊拼音的候選不能替換新拼音。
+- 加大候選點按範圍，保留展開／收起與個人詞頻。
+- 主鍵盤固定標點列：中文 ，。？！；英文 , . ? !。
+- 字母鍵帽微收窄，按鈕點按範圍與 49dp 高度保留。
+- 修正 raw 提交重複與最後一個 composing 字母刪不乾淨。
+
+標點在尚未選字時會保留原拼音一次，不自動猜字；要輸入中文句子，先選字再按標點。
+
+## 驗證
+
+GitHub Actions 執行 `gradle :app:testDebugUnitTest` 與 `gradle :app:assembleDebug`。
+Robolectric 回歸測試涵蓋 composing、快速查詢、過期候選、前綴與展開一致性。
+Artifact：`Forest-Keyboard-V0.9.1-debug`。
+
+真機重點：快速輸入／退格、橫向及展開選字、空格選字、中文／英文標點、切 App。
+本版仍待真機 QA，不代表手感已驗收。
