@@ -1,0 +1,78 @@
+# Forest Keyboard Traditional Chinese Pinyin Dictionary v0.7
+# format: pinyin<TAB>space-separated candidates
+wo	我 握 窩 喔
+ni	你 妳 呢 泥
+hao	好 號 浩 豪
+shi	是 時 事 市 十
+de	的 得 德
+le	了 樂 勒
+ma	嗎 媽 馬 嘛
+ai	愛 哎 唉
+zai	在 再 載
+you	有 又 由 友
+bu	不 部 步
+ren	人 認 任
+jin	今 金 進
+tian	天 田 甜
+jin tian	今天
+ming	明 名 鳴
+ming tian	明天
+xian	現 先 線
+xian zai	現在
+men	們 門
+wo men	我們
+ni men	你們
+ke	可 科 刻
+yi	以 一 已 意
+ke yi	可以
+xi	喜 西 希
+huan	歡 換 還
+xi huan	喜歡
+hen	很 狠 恨
+zhen	真 鎮 珍
+zhen de	真的
+xiang	想 像 向 香
+yao	要 咬 藥
+qu	去 區 取
+kan	看 砍 刊
+da	大 打 答
+zi	字 子 自
+jian	見 件 間
+jing	精 經 京
+shen	神 身 深
+ling	領 零 靈
+xiu	袖 秀 修
+jing shen	精神
+ling xiu	領袖
+jing shen ling xiu	精神領袖
+sen	森
+lin	林
+sen lin	森林
+zhong	中 種 重
+wen	文 問 聞
+zhong wen	中文
+pan	盤 判
+jian pan	鍵盤
+chi	吃 持 遲 池
+fan	飯 反 凡 翻
+chi fan	吃飯
+gong	工 公 功 宮
+zuo	作 做 座 左
+gong zuo	工作
+xin	新 心 信 辛
+xin wen	新聞
+shou	手 受 首 收
+ji	機 幾 及 記
+shou ji	手機
+dian	電 點 店 典
+nao	腦 鬧
+dian nao	電腦
+xue	學 雪 穴
+sheng	生 聲 勝
+xue sheng	學生
+lao	老 牢
+shi	師 是 時 事 市 十
+lao shi	老師
+peng	朋 蓬
+you	友 有 又 由
+peng you	朋友
