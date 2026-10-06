@@ -23,12 +23,15 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Test composing and candidate regressions
+        run: gradle :app:testDebugUnitTest
+
       - name: Build debug APK
         run: gradle :app:assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Forest-Keyboard-V0.1-debug
+          name: Forest-Keyboard-V0.9.1-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error

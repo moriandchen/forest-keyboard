@@ -14,6 +14,12 @@ import android.widget.TextView
 import android.widget.GridLayout
 import android.widget.ScrollView
 import android.content.Context
+import android.graphics.drawable.InsetDrawable
+import android.os.Handler
+import android.os.Looper
+import android.view.inputmethod.EditorInfo
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import kotlin.math.abs
 
 class ForestKeyboardService : InputMethodService() {
@@ -26,6 +32,17 @@ class ForestKeyboardService : InputMethodService() {
     private var spaceStartX=0f
     private var lastCursorStep=0
     private var candidatesExpanded=false
+    private val mainHandler = Handler(Looper.getMainLooper())
+    // All dictionary caches are confined to this single worker.
+    private val candidateWorker = Executors.newSingleThreadExecutor()
+    private var candidateJob: Future<*>? = null
+    private var candidateRevision = 0
+    private var displayedRaw = ""
+    private var displayedWords = emptyList<String>()
+    private var chooseOnReady = false
+    private var candidateTouch = false
+    private var deferredCandidates: (() -> Unit)? = null
+    private var scheduledRefresh: Runnable? = null
     private val prefs by lazy { getSharedPreferences("forest_learning", Context.MODE_PRIVATE) }
 
     private val pinyin by lazy { loadDictionary() }
@@ -36,6 +53,10 @@ class ForestKeyboardService : InputMethodService() {
             .filter { !it.contains(" ") }
             .sortedByDescending { it.length }
             .toList()
+    }
+    private val syllablesByInitial by lazy { syllables.groupBy { it.first() } }
+    private val syllablePrefixes by lazy {
+        syllables.flatMap { s -> (1..s.length).map { s.take(it) } }.toHashSet()
     }
     // Composing strings repeat heavily while typing (w -> wo -> ...). Cache both
     // segmentation and final candidates for the current app session.
@@ -50,7 +71,7 @@ class ForestKeyboardService : InputMethodService() {
         val out=linkedMapOf<String,MutableList<String>>()
         for((py,words) in pinyin){
             val compact=py.replace(" ","")
-            val maxPrefix=minOf(compact.length,8)
+            val maxPrefix=compact.length
             for(len in 1..maxPrefix){
                 val bucket=out.getOrPut(compact.substring(0,len)){ mutableListOf() }
                 if(bucket.size<24){
@@ -80,6 +101,47 @@ class ForestKeyboardService : InputMethodService() {
         return out.mapValues { (_,v) -> v.distinct() }
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        candidateWorker.submit {
+            // Warm up off the UI thread, including SharedPreferences disk loading.
+            pinyin.size; syllablesByInitial.size; syllablePrefixes.size; prefixIndex.size
+            prefs.all
+        }
+    }
+
+    private fun resetCandidates() {
+        candidateRevision++
+        candidateJob?.cancel(true)
+        scheduledRefresh?.let { mainHandler.removeCallbacks(it) }
+        scheduledRefresh=null
+        deferredCandidates=null
+        candidateTouch=false
+        chooseOnReady=false
+        displayedRaw=""
+        displayedWords=emptyList()
+        composing=""
+        candidatesExpanded=false
+    }
+
+    override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
+        super.onStartInput(attribute,restarting)
+        resetCandidates()
+        if(::root.isInitialized && !numeric) refreshCandidates()
+    }
+
+    override fun onFinishInput() {
+        currentInputConnection?.finishComposingText()
+        resetCandidates()
+        super.onFinishInput()
+    }
+
+    override fun onDestroy() {
+        resetCandidates()
+        candidateWorker.shutdownNow()
+        super.onDestroy()
+    }
+
     override fun onCreateInputView(): View {
         root=LinearLayout(this).apply {
             orientation=LinearLayout.VERTICAL
@@ -96,6 +158,10 @@ class ForestKeyboardService : InputMethodService() {
         background=GradientDrawable().apply {
             cornerRadius=9.dp.toFloat()
             setColor(if(label in listOf("⇧","⌫","123","☺","↵")) Color.rgb(214,216,221) else Color.WHITE)
+        }
+        if(label.length==1 && label[0].isLetter()) {
+            // Narrow the painted cap without reducing the button's touch target.
+            background=InsetDrawable(background,1.dp,0,1.dp,0)
         }
         stateListAnimator=null
         elevation=0f
@@ -118,11 +184,72 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun refreshCandidates(){
-        candidateHost.removeAllViews()
-        renderCandidates(candidateHost)
+        val revision=++candidateRevision
+        val raw=composing
+        val expanded=candidatesExpanded
+        chooseOnReady=false
+        candidateJob?.cancel(true)
+        scheduledRefresh?.let { mainHandler.removeCallbacks(it) }
+        deferredCandidates=null
+        fun applyWords(words:List<String>, all:List<String>) {
+            if(revision!=candidateRevision || raw!=composing || numeric) return
+            if(candidateTouch) {
+                deferredCandidates={ applyWords(words,all) }
+                return
+            }
+            displayedRaw=raw
+            displayedWords=words
+            candidateHost.alpha=1f
+            if(chooseOnReady && words.isNotEmpty()) {
+                chooseOnReady=false
+                choose(words.first())
+                return
+            }
+            candidateHost.removeAllViews()
+            renderCandidates(candidateHost,raw,words,all)
+        }
+        if(raw.isBlank()) {
+            applyWords(listOf("繁","簡","「」","常用"),emptyList())
+            return
+        }
+        // Old candidates may remain visible while loading, but cannot commit for
+        // a different composing string. Coalesce rapid keys into one query/frame.
+        candidateHost.alpha=0.55f
+        scheduledRefresh=Runnable {
+            scheduledRefresh=null
+            candidateJob=candidateWorker.submit {
+                try {
+                    val words=candidateList(raw)
+                    val all=if(expanded) expandedCandidateList(raw) else emptyList()
+                    if(!Thread.currentThread().isInterrupted) {
+                        mainHandler.post { applyWords(words,all) }
+                    }
+                } catch (_: InterruptedException) {
+                    // Superseded by a new key. Never cache a partial computation.
+                }
+            }
+        }.also { mainHandler.postDelayed(it,16) }
     }
 
-    private fun renderCandidates(host:LinearLayout){
+    private fun trackCandidateTouch(view:View) {
+        view.setOnTouchListener { _,event ->
+            when(event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> candidateTouch=true
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    candidateTouch=false
+                    // Let the click finish before replacing its target view.
+                    mainHandler.post {
+                        val pending=deferredCandidates
+                        deferredCandidates=null
+                        pending?.invoke()
+                    }
+                }
+            }
+            false
+        }
+    }
+
+    private fun renderCandidates(host:LinearLayout, raw:String, words:List<String>, all:List<String>){
         val bar=LinearLayout(this).apply {
             orientation=LinearLayout.HORIZONTAL
             gravity=Gravity.CENTER_VERTICAL
@@ -138,16 +265,19 @@ class ForestKeyboardService : InputMethodService() {
         bar.addView(mode)
         val scroll=HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; layoutParams=LinearLayout.LayoutParams(0,43.dp,1f) }
         val candidates=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
-        val words=if(composing.isBlank()) listOf("繁","簡","「」","常用") else candidateList(composing)
         words.forEach { word ->
             candidates.addView(TextView(this).apply {
-                text=word; textSize=20f; gravity=Gravity.CENTER; setPadding(15,0,15,0)
+                text=word; textSize=20f; gravity=Gravity.CENTER; setPadding(18.dp,0,18.dp,0)
+                minimumWidth=56.dp
+                layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,43.dp)
                 setTextColor(Color.rgb(38,38,42))
                 setBackgroundColor(Color.rgb(250,250,251))
                 setSingleLine(true)
+                trackCandidateTouch(this)
                 setOnClickListener {
+                    if(raw!=composing) return@setOnClickListener
                     when {
-                        composing.isNotBlank() -> choose(word)
+                        raw.isNotBlank() -> choose(word)
                         word=="「」" -> { commit("「」"); send(KeyEvent.KEYCODE_DPAD_LEFT) }
                     }
                 }
@@ -165,7 +295,6 @@ class ForestKeyboardService : InputMethodService() {
         bar.addView(expand); host.addView(bar)
 
         if(candidatesExpanded && composing.isNotBlank()){
-            val all=expandedCandidateList(composing)
             val grid=GridLayout(this).apply {
                 columnCount=4
                 setPadding(8.dp,4.dp,8.dp,8.dp)
@@ -175,8 +304,15 @@ class ForestKeyboardService : InputMethodService() {
                 grid.addView(TextView(this).apply {
                     text=word; textSize=20f; gravity=Gravity.CENTER
                     setTextColor(Color.rgb(38,38,42)); setPadding(8.dp,10.dp,8.dp,10.dp)
-                    layoutParams=GridLayout.LayoutParams().apply { width=0; columnSpec=GridLayout.spec(GridLayout.UNDEFINED,1,1f) }
+                    minimumHeight=48.dp
+                    layoutParams=GridLayout.LayoutParams().apply {
+                        width=0
+                        setMargins(3.dp,2.dp,3.dp,2.dp)
+                        columnSpec=GridLayout.spec(GridLayout.UNDEFINED,1,1f)
+                    }
+                    trackCandidateTouch(this)
                     setOnClickListener {
+                        if(raw!=composing) return@setOnClickListener
                         // Collapse/remove the expanded panel immediately. Some IME hosts
                         // defer the full root redraw after commitText(), leaving the old
                         // ScrollView visible even though the state is already false.
@@ -193,6 +329,14 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun renderLetterKeys(){
+        // Persistent punctuation row: available even while composing.
+        val marks=if(english) listOf(",",".","?","!") else listOf("，","。","？","！")
+        root.addView(row(*marks.map { mark ->
+            key(mark){ punct(mark) }.apply {
+                layoutParams=LinearLayout.LayoutParams(0,34.dp,1f).apply { setMargins(2,2,2,2) }
+                textSize=20f
+            }
+        }.toTypedArray()))
         root.addView(row(*"qwertyuiop".map { c ->
             val label=if(shift)c.uppercase() else c.toString(); key(label){letter(label)}
         }.toTypedArray()))
@@ -239,6 +383,7 @@ class ForestKeyboardService : InputMethodService() {
             phrases.addAll(prefixCandidates(raw))
             phrases.distinct().take(12).ifEmpty { listOf(raw) }
         }
+        if(Thread.currentThread().isInterrupted) throw InterruptedException()
         candidateCache[raw]=base
         return rank(raw,base)
     }
@@ -249,7 +394,7 @@ class ForestKeyboardService : InputMethodService() {
 
         // 1) O(1)-style lookup from a prebuilt compact-Pinyin prefix index.
         // No full dictionary scan while the user is pressing keys.
-        prefixIndex[raw.take(8)]?.let { out.addAll(it) }
+        prefixIndex[raw]?.let { out.addAll(it) }
 
         // 2) Preserve a completed leading syllable while the next one is partial.
         // Example: xih -> xi + h..., so 喜/西/希 remain useful candidates.
@@ -257,7 +402,7 @@ class ForestKeyboardService : InputMethodService() {
             val left=raw.substring(0,split)
             val right=raw.substring(split)
             val leftWords=pinyin[left]
-            if(leftWords!=null && syllables.any { it.startsWith(right) }){
+            if(leftWords!=null && right in syllablePrefixes){
                 out.addAll(leftWords.take(8))
                 break
             }
@@ -266,7 +411,7 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun expandedCandidateList(raw:String):List<String>{
-        val out=mutableListOf<String>()
+        val out=candidateList(raw).toMutableList()
         pinyin[raw]?.let { out.addAll(rank(raw,it)) }
         for(parts in segment(raw).take(24)){
             val spaced=parts.joinToString(" ")
@@ -291,7 +436,8 @@ class ForestKeyboardService : InputMethodService() {
             if(pos==raw.length)return listOf(emptyList())
             memo[pos]?.let{return it}
             val out=mutableListOf<List<String>>()
-            for(s in syllables){
+            if(Thread.currentThread().isInterrupted) throw InterruptedException()
+            for(s in syllablesByInitial[raw[pos]].orEmpty()){
                 if(raw.startsWith(s,pos)){
                     for(tail in walk(pos+s.length)) {
                         out += listOf(s)+tail
@@ -303,7 +449,10 @@ class ForestKeyboardService : InputMethodService() {
             memo[pos]=out
             return out
         }
-        return walk(0).also { segmentationCache[raw]=it }
+        val result=walk(0)
+        if(Thread.currentThread().isInterrupted) throw InterruptedException()
+        segmentationCache[raw]=result
+        return result
     }
 
     private fun choose(word:String){
@@ -325,28 +474,35 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun rank(raw:String, words:List<String>):List<String>{
+        val frequencies=words.associateWith { prefs.getInt("freq|" + raw + "|" + it,0) }
         return words.withIndex()
-            .sortedWith(compareByDescending<IndexedValue<String>> { item ->
-                prefs.getInt("freq|" + raw + "|" + item.value,0)
-            }.thenBy { item -> item.index })
-            .map { item -> item.value }
+            .sortedWith(compareByDescending<IndexedValue<String>> { frequencies[it.value] ?: 0 }
+                .thenBy { it.index })
+            .map { it.value }
     }
 
     private fun flushRaw(){
         if(composing.isNotEmpty()){
-            currentInputConnection.finishComposingText()
             currentInputConnection.commitText(composing,1)
             composing=""
+            candidatesExpanded=false
+            refreshCandidates()
         }
     }
 
-    private fun punct(s:String){ flushRaw(); commit(s) }
+    private fun punct(s:String){
+        // A punctuation tap never guesses an unseen candidate.
+        flushRaw()
+        candidatesExpanded=false
+        commit(s)
+        refreshCandidates()
+    }
 
     private fun backspace(){
         if(composing.isNotEmpty()){
             composing=composing.dropLast(1)
+            currentInputConnection.setComposingText(composing,1)
             if(composing.isEmpty()) currentInputConnection.finishComposingText()
-            else currentInputConnection.setComposingText(composing,1)
             refreshCandidates()
         } else currentInputConnection.deleteSurroundingText(1,0)
     }
@@ -369,14 +525,20 @@ class ForestKeyboardService : InputMethodService() {
                 MotionEvent.ACTION_DOWN->{spaceStartX=e.x;lastCursorStep=0;true}
                 MotionEvent.ACTION_MOVE->{
                     val step=((e.x-spaceStartX)/24.dp).toInt(); val diff=step-lastCursorStep
-                    if(diff!=0){ val code=if(diff>0)KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT; repeat(abs(diff)){send(code)};lastCursorStep=step }
+                    if(diff!=0){
+                        if(composing.isNotEmpty()) { flushRaw(); refreshCandidates() }
+                        val code=if(diff>0)KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT; repeat(abs(diff)){send(code)};lastCursorStep=step }
                     true
                 }
                 MotionEvent.ACTION_UP->{
                     if(abs(e.x-spaceStartX)<12.dp){
                         if(composing.isNotEmpty()){
-                            val first=candidateList(composing).first()
-                            choose(first)
+                            if(displayedRaw==composing && displayedWords.isNotEmpty()) {
+                                choose(displayedWords.first())
+                            } else {
+                                // Wait for this exact query rather than selecting stale text.
+                                chooseOnReady=true
+                            }
                         } else commit(" ")
                     }
                     true
