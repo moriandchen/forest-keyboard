@@ -202,10 +202,41 @@ class ForestKeyboardService : InputMethodService() {
                 val perSyllable=parts.map { pinyin[it]?.firstOrNull() }
                 if(perSyllable.all { it != null }) phrases += perSyllable.filterNotNull().joinToString("")
             }
+            // If the last syllable is still incomplete (e.g. xih -> xi + h...),
+            // preserve candidates for the completed prefix and predict dictionary
+            // entries whose compact Pinyin starts with what the user has typed.
+            phrases.addAll(prefixCandidates(raw))
             phrases.distinct().take(12).ifEmpty { listOf(raw) }
         }
         candidateCache[raw]=base
         return rank(raw,base)
+    }
+
+    private fun prefixCandidates(raw:String):List<String>{
+        if(raw.isBlank()) return emptyList()
+        val out=LinkedHashSet<String>()
+
+        // 1) Predict complete dictionary keys from the current compact prefix.
+        // Limit the scan result aggressively so typing remains responsive.
+        for((py,words) in pinyin){
+            if(py.replace(" ","").startsWith(raw)){
+                out.addAll(words.take(4))
+                if(out.size>=24) break
+            }
+        }
+
+        // 2) Preserve a completed leading syllable while the next one is partial.
+        // Example: xih -> xi + h..., so 喜/西/希 remain useful candidates.
+        for(split in raw.length-1 downTo 1){
+            val left=raw.substring(0,split)
+            val right=raw.substring(split)
+            val leftWords=pinyin[left]
+            if(leftWords!=null && syllables.any { it.startsWith(right) }){
+                out.addAll(leftWords.take(8))
+                break
+            }
+        }
+        return out.take(24)
     }
 
     private fun expandedCandidateList(raw:String):List<String>{
