@@ -18,6 +18,7 @@ import kotlin.math.abs
 
 class ForestKeyboardService : InputMethodService() {
     private lateinit var root: LinearLayout
+    private lateinit var candidateHost: LinearLayout
     private var numeric=false
     private var english=false
     private var shift=false
@@ -85,6 +86,7 @@ class ForestKeyboardService : InputMethodService() {
             setPadding(5,4,5,5)
             setBackgroundColor(Color.rgb(225,227,232))
         }
+        candidateHost=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
         render(); return root
     }
 
@@ -105,9 +107,22 @@ class ForestKeyboardService : InputMethodService() {
         orientation=LinearLayout.HORIZONTAL; gravity=Gravity.CENTER; keys.forEach(::addView)
     }
 
-    private fun render(){ root.removeAllViews(); if(numeric) renderNumeric() else renderLetters() }
+    private fun render(){
+        root.removeAllViews()
+        if(numeric) renderNumeric() else {
+            if(candidateHost.parent!=null) (candidateHost.parent as? LinearLayout)?.removeView(candidateHost)
+            root.addView(candidateHost)
+            refreshCandidates()
+            renderLetterKeys()
+        }
+    }
 
-    private fun renderCandidates(){
+    private fun refreshCandidates(){
+        candidateHost.removeAllViews()
+        renderCandidates(candidateHost)
+    }
+
+    private fun renderCandidates(host:LinearLayout){
         val bar=LinearLayout(this).apply {
             orientation=LinearLayout.HORIZONTAL
             gravity=Gravity.CENTER_VERTICAL
@@ -144,10 +159,10 @@ class ForestKeyboardService : InputMethodService() {
             setTextColor(Color.rgb(35,35,38))
             layoutParams=LinearLayout.LayoutParams(48.dp,46.dp)
             setOnClickListener {
-                if(composing.isNotBlank()){ candidatesExpanded=!candidatesExpanded; render() }
+                if(composing.isNotBlank()){ candidatesExpanded=!candidatesExpanded; refreshCandidates() }
             }
         }
-        bar.addView(expand); root.addView(bar)
+        bar.addView(expand); host.addView(bar)
 
         if(candidatesExpanded && composing.isNotBlank()){
             val all=expandedCandidateList(composing)
@@ -166,20 +181,18 @@ class ForestKeyboardService : InputMethodService() {
                         // defer the full root redraw after commitText(), leaving the old
                         // ScrollView visible even though the state is already false.
                         candidatesExpanded=false
-                        root.removeAllViews()
                         choose(word)
                     }
                 })
             }
-            root.addView(ScrollView(this).apply {
+            host.addView(ScrollView(this).apply {
                 layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,132.dp)
                 addView(grid)
             })
         }
     }
 
-    private fun renderLetters(){
-        renderCandidates()
+    private fun renderLetterKeys(){
         root.addView(row(*"qwertyuiop".map { c ->
             val label=if(shift)c.uppercase() else c.toString(); key(label){letter(label)}
         }.toTypedArray()))
@@ -206,7 +219,7 @@ class ForestKeyboardService : InputMethodService() {
         if(english){ commit(s); return }
         composing += s.lowercase()
         currentInputConnection.setComposingText(composing,1)
-        render()
+        refreshCandidates()
     }
 
     private fun candidateList(raw:String):List<String>{
@@ -302,7 +315,7 @@ class ForestKeyboardService : InputMethodService() {
         currentInputConnection.commitText(word,1)
         composing=""
         candidatesExpanded=false
-        render()
+        refreshCandidates()
     }
 
     private fun learn(raw:String, word:String){
@@ -334,7 +347,7 @@ class ForestKeyboardService : InputMethodService() {
             composing=composing.dropLast(1)
             if(composing.isEmpty()) currentInputConnection.finishComposingText()
             else currentInputConnection.setComposingText(composing,1)
-            render()
+            refreshCandidates()
         } else currentInputConnection.deleteSurroundingText(1,0)
     }
 
