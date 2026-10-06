@@ -44,6 +44,24 @@ class ForestKeyboardService : InputMethodService() {
     private val candidateCache = object : LinkedHashMap<String,List<String>>(128,0.75f,true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String,List<String>>?) = size > 256
     }
+    // Compact-Pinyin prefix index: avoids scanning every dictionary entry on each keystroke.
+    private val prefixIndex by lazy {
+        val out=linkedMapOf<String,MutableList<String>>()
+        for((py,words) in pinyin){
+            val compact=py.replace(" ","")
+            val maxPrefix=minOf(compact.length,8)
+            for(len in 1..maxPrefix){
+                val bucket=out.getOrPut(compact.substring(0,len)){ mutableListOf() }
+                if(bucket.size<24){
+                    for(word in words.take(4)){
+                        if(word !in bucket) bucket.add(word)
+                        if(bucket.size>=24) break
+                    }
+                }
+            }
+        }
+        out.mapValues { it.value.toList() }
+    }
 
     private fun loadDictionary():Map<String,List<String>>{
         val out=linkedMapOf<String,MutableList<String>>()
@@ -216,14 +234,9 @@ class ForestKeyboardService : InputMethodService() {
         if(raw.isBlank()) return emptyList()
         val out=LinkedHashSet<String>()
 
-        // 1) Predict complete dictionary keys from the current compact prefix.
-        // Limit the scan result aggressively so typing remains responsive.
-        for((py,words) in pinyin){
-            if(py.replace(" ","").startsWith(raw)){
-                out.addAll(words.take(4))
-                if(out.size>=24) break
-            }
-        }
+        // 1) O(1)-style lookup from a prebuilt compact-Pinyin prefix index.
+        // No full dictionary scan while the user is pressing keys.
+        prefixIndex[raw.take(8)]?.let { out.addAll(it) }
 
         // 2) Preserve a completed leading syllable while the next one is partial.
         // Example: xih -> xi + h..., so 喜/西/希 remain useful candidates.
