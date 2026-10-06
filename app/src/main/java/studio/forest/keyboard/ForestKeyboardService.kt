@@ -11,6 +11,8 @@ import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.GridLayout
+import android.widget.ScrollView
 import android.content.Context
 import kotlin.math.abs
 
@@ -22,6 +24,7 @@ class ForestKeyboardService : InputMethodService() {
     private var composing=""
     private var spaceStartX=0f
     private var lastCursorStep=0
+    private var candidatesExpanded=false
     private val prefs by lazy { getSharedPreferences("forest_learning", Context.MODE_PRIVATE) }
 
     private val pinyin by lazy { loadDictionary() }
@@ -119,14 +122,35 @@ class ForestKeyboardService : InputMethodService() {
         }
         scroll.addView(candidates); bar.addView(scroll)
         val expand=TextView(this).apply {
-            text="⌄"; textSize=24f; gravity=Gravity.CENTER
+            text=if(candidatesExpanded)"⌃" else "⌄"; textSize=24f; gravity=Gravity.CENTER
             setTextColor(Color.rgb(35,35,38))
             layoutParams=LinearLayout.LayoutParams(48.dp,46.dp)
             setOnClickListener {
-                if(composing.isNotBlank()) scroll.fullScroll(View.FOCUS_RIGHT)
+                if(composing.isNotBlank()){ candidatesExpanded=!candidatesExpanded; render() }
             }
         }
         bar.addView(expand); root.addView(bar)
+
+        if(candidatesExpanded && composing.isNotBlank()){
+            val all=expandedCandidateList(composing)
+            val grid=GridLayout(this).apply {
+                columnCount=4
+                setPadding(8.dp,4.dp,8.dp,8.dp)
+                setBackgroundColor(Color.rgb(250,250,251))
+            }
+            all.forEach { word ->
+                grid.addView(TextView(this).apply {
+                    text=word; textSize=20f; gravity=Gravity.CENTER
+                    setTextColor(Color.rgb(38,38,42)); setPadding(8.dp,10.dp,8.dp,10.dp)
+                    layoutParams=GridLayout.LayoutParams().apply { width=0; columnSpec=GridLayout.spec(GridLayout.UNDEFINED,1,1f) }
+                    setOnClickListener { candidatesExpanded=false; choose(word) }
+                })
+            }
+            root.addView(ScrollView(this).apply {
+                layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,132.dp)
+                addView(grid)
+            })
+        }
     }
 
     private fun renderLetters(){
@@ -177,6 +201,24 @@ class ForestKeyboardService : InputMethodService() {
         return rank(raw,base)
     }
 
+    private fun expandedCandidateList(raw:String):List<String>{
+        val out=mutableListOf<String>()
+        pinyin[raw]?.let { out.addAll(rank(raw,it)) }
+        for(parts in segment(raw).take(24)){
+            val spaced=parts.joinToString(" ")
+            pinyin[spaced]?.let { out.addAll(rank(raw,it)) }
+            // Build several combinations instead of only the first character of each syllable.
+            var combos=listOf("")
+            for(part in parts){
+                val choices=pinyin[part].orEmpty().take(4)
+                combos=combos.flatMap { prefix -> choices.map { prefix+it } }.take(64)
+            }
+            out.addAll(combos)
+            if(out.size>=96) break
+        }
+        return out.distinct().take(96).ifEmpty { listOf(raw) }
+    }
+
     private fun segment(raw:String):List<List<String>>{
         if(raw.isBlank()) return emptyList()
         segmentationCache[raw]?.let { return it }
@@ -208,6 +250,7 @@ class ForestKeyboardService : InputMethodService() {
         // do NOT finish it first, otherwise the raw Pinyin becomes permanent.
         currentInputConnection.commitText(word,1)
         composing=""
+        candidatesExpanded=false
         render()
     }
 
