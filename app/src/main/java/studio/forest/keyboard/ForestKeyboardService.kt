@@ -181,7 +181,9 @@ class ForestKeyboardService : InputMethodService() {
     private fun choose(word:String){
         val raw=composing
         learn(raw,word)
-        currentInputConnection.finishComposingText()
+        // setComposingText() already placed the visible Pinyin in the editor.
+        // Replace that composing span with the selected Chinese candidate;
+        // do NOT finish it first, otherwise the raw Pinyin becomes permanent.
         currentInputConnection.commitText(word,1)
         composing=""
         render()
