@@ -3730,3 +3730,20 @@ ao da li ya	澳大利亞
 # Forest practical phrase corrections
 bu zhi dao	不知道
 gei wo	給我
+
+# Forest practical phrase additions (V0.9.9)
+sheng ri kuai le	生日快樂
+wo jue de	我覺得
+jue de bu cuo	覺得不錯
+ni jue de zen yang	你覺得怎樣
+shou gan	手感
+shou gan hai shi bu gou	手感還是不夠
+gan jue hai bu gou	感覺還不夠
+you xia yu le	又下雨了
+hen hao shui jiao	很好睡覺
+hao le hen duo	好了很多
+zhe ci hao le hen duo	這次好了很多
+you ming xian gai shan	有明顯改善
+ji xu you hua	繼續優化
+hai bu cuo	還不錯
+shao yi dian	少一點

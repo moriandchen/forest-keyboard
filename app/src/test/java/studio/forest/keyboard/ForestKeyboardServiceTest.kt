@@ -302,4 +302,16 @@ class ForestKeyboardServiceTest {
         assertEquals("q",field("composing"))
     }
 
+    @Test fun practicalDailyPhrasesReachTheCandidateRow() {
+        val examples=mapOf("shengrikuaile" to "生日快樂", "wojuede" to "我覺得",
+            "jue de bu cuo" to "覺得不錯", "shouganhaishibugou" to "手感還是不夠",
+            "ganjuehaibugou" to "感覺還不夠", "youxiayule" to "又下雨了",
+            "henhaoshuijiao" to "很好睡覺", "zhecihaolehen duo" to "這次好了很多",
+            "youmingxiangaishan" to "有明顯改善", "jixuyouhua" to "繼續優化")
+        examples.forEach { (raw,word) ->
+            val query=raw.replace(" ","")
+            assertEquals(query,word,(invoke("candidateList",query) as List<*>).first())
+        }
+    }
+
 }
