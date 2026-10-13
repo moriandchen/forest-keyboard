@@ -66,7 +66,20 @@ class ForestKeyboardService : InputMethodService() {
                 }
             }
         }
+        if(key==KeyboardPreferences.CUSTOM_REVISION) {
+            candidateWorker.submit {
+                reloadCustomDictionary()
+                candidateCache.clear()
+                mainHandler.post {
+                    if(::root.isInitialized && !passwordField && composing.isNotBlank()) refreshCandidates()
+                }
+            }
+        }
     }
+
+    // These snapshots are rebuilt only on the dictionary worker when settings change.
+    private var customByPinyin:Map<String,List<String>> = emptyMap()
+    private var customPrefixIndex:Map<String,List<String>> = emptyMap()
 
     // Worker-owned index, restored once. Queries never scan all preferences.
     private val learnedByRaw by lazy {
@@ -169,11 +182,25 @@ class ForestKeyboardService : InputMethodService() {
         return out.mapValues { (_,v) -> v.distinct() }
     }
 
+    private fun reloadCustomDictionary() {
+        val exact=KeyboardPreferences.customPhrases(this)
+        val prefixes=linkedMapOf<String,MutableList<String>>()
+        exact.forEach { (py,words) ->
+            for(length in 1..py.length) {
+                val bucket=prefixes.getOrPut(py.take(length)) { mutableListOf() }
+                for(word in words) if(word !in bucket) bucket.add(word)
+            }
+        }
+        customByPinyin=exact
+        customPrefixIndex=prefixes.mapValues { it.value.toList() }
+    }
+
     override fun onCreate() {
         super.onCreate()
         prefs.registerOnSharedPreferenceChangeListener(prefsListener)
         candidateWorker.submit {
             // Warm up off the UI thread, including SharedPreferences disk loading.
+            reloadCustomDictionary()
             pinyin.size; compactDictionary.size; wordPinyin.size
             syllablesByInitial.size; syllablePrefixes.size; prefixIndex.size; initialsIndex.size
             learnedByRaw.size
@@ -522,13 +549,18 @@ class ForestKeyboardService : InputMethodService() {
     private fun candidateList(raw:String):List<String>{
         // Keep ranking dynamic so personal learning takes effect immediately.
         candidateCache[raw]?.let { return personalize(raw,it) }
-        val base = pinyin[raw] ?: run {
+        val dictionaryExact=pinyin[raw].orEmpty()
+        val customExact=customByPinyin[raw].orEmpty()
+        val customPredicted=customPrefixIndex[raw].orEmpty()
+        val base = if(dictionaryExact.isNotEmpty() || customExact.isNotEmpty()) {
+            (customExact + dictionaryExact + customPredicted).distinct().take(24)
+        } else {
             // Cache dictionary order only; personal ranking stays dynamic.
             val exact=compactDictionary[raw].orEmpty()
             val abbreviated=if(raw.length>=2) initialsIndex[raw].orEmpty() else emptyList()
             val predicted=prefixCandidates(raw)
             val leading=leadingCandidates(raw)
-            (exact + abbreviated + predicted.take(6) + leading.take(8) + predicted)
+            (customPredicted + exact + abbreviated + predicted.take(6) + leading.take(8) + predicted)
                 .distinct().take(24).ifEmpty { listOf(raw) }
         }
         if(Thread.currentThread().isInterrupted) throw InterruptedException()
@@ -586,6 +618,8 @@ class ForestKeyboardService : InputMethodService() {
     private fun expandedCandidateList(raw:String):List<String>{
         val out=candidateList(raw).toMutableList()
         out.addAll(leadingCandidates(raw))
+        out.addAll(customPrefixIndex[raw].orEmpty())
+        out.addAll(customByPinyin[raw].orEmpty())
         out.addAll(compactDictionary[raw].orEmpty())
         out.addAll(initialsIndex[raw].orEmpty())
         out.addAll(prefixIndex[raw].orEmpty())
@@ -647,7 +681,8 @@ class ForestKeyboardService : InputMethodService() {
 
     private fun learn(raw:String, word:String){
         if(raw.isBlank() || word==raw || learningRestricted ||
-            !prefs.getBoolean(KeyboardPreferences.AUTO_LEARNING,true)) return
+            !prefs.getBoolean(KeyboardPreferences.AUTO_LEARNING,true) ||
+            customPrefixIndex[raw].orEmpty().contains(word)) return
         val key="freq|" + raw + "|" + word
         prefs.edit().putInt(key,prefs.getInt(key,0)+1).apply()
         candidateWorker.submit {
@@ -656,7 +691,9 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun rank(raw:String, words:List<String>):List<String>{
-        val exact=compactDictionary[raw].orEmpty().toHashSet()
+        val customExact=customByPinyin[raw].orEmpty().toHashSet()
+        val customPredicted=customPrefixIndex[raw].orEmpty().toHashSet()
+        val exactDictionary=compactDictionary[raw].orEmpty().toHashSet()
         val frequencies=words.associateWith { word ->
             val direct=prefs.getInt("freq|" + raw + "|" + word,0)
             val consumed=consumedLength(raw,word)
@@ -665,7 +702,14 @@ class ForestKeyboardService : InputMethodService() {
             maxOf(direct,leading)
         }
         return words.withIndex()
-            .sortedWith(compareBy<IndexedValue<String>> { if(it.value in exact) 0 else 1 }
+            .sortedWith(compareBy<IndexedValue<String>> {
+                when {
+                    it.value in customExact -> 0
+                    it.value in customPredicted -> 1
+                    it.value in exactDictionary -> 2
+                    else -> 3
+                }
+            }
                 .thenByDescending { frequencies[it.value] ?: 0 }
                 .thenBy { it.index })
             .map { it.value }

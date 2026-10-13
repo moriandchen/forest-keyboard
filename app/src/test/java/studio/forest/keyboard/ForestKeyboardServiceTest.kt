@@ -378,6 +378,29 @@ class ForestKeyboardServiceTest {
         assertFalse(labels.contains("更多"))
     }
 
+    @Test fun customPhraseIsIndexedAndReplacesItsPinyin() {
+        KeyboardPreferences.addCustomPhrase(service,"billkin","Billkin")
+        drain()
+        val worker=field("candidateWorker") as ExecutorService
+        val candidates=worker.submit<List<String>> {
+            invoke("candidateList","billkin") as List<String>
+        }.get(10,TimeUnit.SECONDS)
+        assertEquals("Billkin",candidates.first())
+        "billkin".forEach { invoke("letter",it.toString()) }
+        drain()
+        invoke("choose","Billkin")
+        drain()
+        assertEquals("Billkin",connection.editable.toString())
+        assertEquals("",field("composing"))
+    }
+
+    @Test fun customPhraseCanBeRemovedByItsPinyin() {
+        KeyboardPreferences.addCustomPhrase(service,"forest","Forest Studio")
+        assertEquals(listOf("Forest Studio"),KeyboardPreferences.customPhrases(service)["forest"])
+        KeyboardPreferences.removeCustomPhrases(service,"forest")
+        assertFalse(KeyboardPreferences.customPhrases(service).containsKey("forest"))
+    }
+
     private fun View.children():List<View> = (0 until (this as? android.view.ViewGroup)?.childCount.orZero())
         .mapNotNull { (this as? android.view.ViewGroup)?.getChildAt(it) }
     private fun Int?.orZero()=this ?: 0

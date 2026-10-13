@@ -7,14 +7,17 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import android.text.InputType
 
 class MainActivity : Activity() {
     private val prefs by lazy { getSharedPreferences(KeyboardPreferences.FILE, MODE_PRIVATE) }
+    private lateinit var customPhraseList:LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,7 @@ class MainActivity : Activity() {
             setTextColor(0xFF202124.toInt())
         })
         content.addView(TextView(this).apply {
-            text="V0.9.11 · 輸入與學習設定"
+            text="V0.9.12 · 個人詞庫與輸入設定"
             textSize=14f
             setTextColor(0xFF606168.toInt())
             setPadding(0,4.dp,0,18.dp)
@@ -49,6 +52,20 @@ class MainActivity : Activity() {
             "關閉後按鍵不再觸發觸覺回饋"))
         content.addView(settingSwitch("按鍵音效",KeyboardPreferences.KEY_SOUND,true,
             "關閉後按鍵不再播放系統點擊音"))
+        content.addView(sectionTitle("自訂短語"))
+        content.addView(TextView(this).apply {
+            text="加入常用名字、品牌或固定譯名；輸入拼音前綴時就能選用。"
+            textSize=14f
+            setTextColor(0xFF606168.toInt())
+            setPadding(0,0,0,8.dp)
+        })
+        content.addView(Button(this).apply {
+            text="新增自訂短語"
+            setOnClickListener { showAddCustomPhraseDialog() }
+        })
+        customPhraseList=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
+        content.addView(customPhraseList)
+        renderCustomPhraseList()
         content.addView(sectionTitle("學習資料"))
         content.addView(TextView(this).apply {
             text="學習資料只保存在這部裝置。密碼欄位不顯示拼音候選，也不會記錄輸入。"
@@ -61,6 +78,11 @@ class MainActivity : Activity() {
             setOnClickListener { confirmClearLearning() }
         })
         setContentView(ScrollView(this).apply { addView(content) })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(::customPhraseList.isInitialized) renderCustomPhraseList()
     }
 
     private fun sectionTitle(title:String)=TextView(this).apply {
@@ -98,6 +120,79 @@ class MainActivity : Activity() {
                 Toast.makeText(this,"已清除 $removed 筆學習記錄",Toast.LENGTH_SHORT).show()
             }
             .show()
+    }
+
+    private fun showAddCustomPhraseDialog() {
+        val form=LinearLayout(this).apply {
+            orientation=LinearLayout.VERTICAL
+            setPadding(24.dp,8.dp,24.dp,0)
+        }
+        val pinyin=EditText(this).apply {
+            hint="拼音，例如 billkin"
+            inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            setSingleLine(true)
+        }
+        val phrase=EditText(this).apply {
+            hint="要顯示的字詞，例如 Billkin"
+            inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            setSingleLine(true)
+        }
+        form.addView(pinyin)
+        form.addView(phrase)
+        val dialog=AlertDialog.Builder(this)
+            .setTitle("新增自訂短語")
+            .setView(form)
+            .setNegativeButton("取消",null)
+            .setPositiveButton("加入",null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val py=pinyin.text.toString().trim().lowercase()
+                val word=phrase.text.toString().trim()
+                if(!py.matches(Regex("[a-z]+")) || word.isBlank()) {
+                    Toast.makeText(this,"請輸入英文字母拼音和字詞",Toast.LENGTH_SHORT).show()
+                } else {
+                    KeyboardPreferences.addCustomPhrase(this,py,word)
+                    renderCustomPhraseList()
+                    dialog.dismiss()
+                }
+            }
+        }
+        dialog.show()
+    }
+
+    private fun renderCustomPhraseList() {
+        customPhraseList.removeAllViews()
+        val phrases=KeyboardPreferences.customPhrases(this).toSortedMap()
+        if(phrases.isEmpty()) {
+            customPhraseList.addView(TextView(this).apply {
+                text="尚未新增短語"
+                textSize=14f
+                setTextColor(0xFF73747A.toInt())
+                setPadding(0,4.dp,0,8.dp)
+            })
+            return
+        }
+        phrases.forEach { (py,words) ->
+            val row=LinearLayout(this).apply {
+                orientation=LinearLayout.HORIZONTAL
+                gravity=android.view.Gravity.CENTER_VERTICAL
+            }
+            row.addView(TextView(this).apply {
+                text="$py  →  ${words.joinToString("、")}"
+                textSize=15f
+                setTextColor(0xFF303136.toInt())
+                layoutParams=LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT,1f)
+            })
+            row.addView(Button(this).apply {
+                text="移除"
+                setOnClickListener {
+                    KeyboardPreferences.removeCustomPhrases(this@MainActivity,py)
+                    renderCustomPhraseList()
+                }
+            })
+            customPhraseList.addView(row)
+        }
     }
 
     private val Int.dp:Int get()=(this*resources.displayMetrics.density).toInt()
