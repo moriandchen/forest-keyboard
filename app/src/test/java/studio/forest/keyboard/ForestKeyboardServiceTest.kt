@@ -223,14 +223,14 @@ class ForestKeyboardServiceTest {
     }
 
     @Test fun completePhraseStaysFirstDespiteFrequentLeadingWord() {
-        repeat(20) { invoke("learn","bu","不") }
+        repeat(20) { invoke("learn","bu","不") }; drain()
         val words=invoke("candidateList","buzhidao") as List<*>
         assertEquals("不知道",words.first())
     }
 
     @Test fun partialLearningChangesCachedCandidateOrder() {
         invoke("candidateList","geiwo")
-        repeat(5) { invoke("learn","gei","給") }
+        repeat(5) { invoke("learn","gei","給") }; drain()
         val words=invoke("candidateList","geiwo") as List<*>
         assertEquals("給我",words.first())
         assertEquals("給",words[1])
@@ -259,6 +259,37 @@ class ForestKeyboardServiceTest {
         assertEquals("「」",(row.getChildAt(0) as TextView).text.toString())
         row.getChildAt(1).performClick()
         assertEquals("、",connection.editable.toString())
+    }
+
+    @Test fun expandedSelectionReturnsToOrdinaryCandidates() {
+        val worker=field("candidateWorker") as ExecutorService
+        val chosen=worker.submit<String> {
+            val regular=invoke("candidateList","b") as List<*>
+            val expanded=invoke("expandedCandidateList","b") as List<*>
+            expanded.first { it !in regular } as String
+        }.get(10,TimeUnit.SECONDS)
+        "b".forEach { invoke("letter",it.toString()) }; drain()
+        invoke("choose",chosen); drain()
+        invoke("letter","b"); drain()
+        assertEquals(chosen,(field("displayedWords") as List<*>).first())
+    }
+
+    @Test fun learnedCandidatesSurviveServiceRestart() {
+        invoke("learn","b","補償"); drain()
+        service.onDestroy()
+        setup()
+        invoke("letter","b"); drain()
+        assertEquals("補償",(field("displayedWords") as List<*>).first())
+    }
+
+    @Test fun oldSyntheticOrUnrelatedLearningIsNotRecalled() {
+        invoke("learn","buzhidao","不之到")
+        invoke("learn","b","朋友"); drain()
+        val worker=field("candidateWorker") as ExecutorService
+        worker.submit {
+            assertFalse((invoke("candidateList","buzhidao") as List<*>).contains("不之到"))
+            assertFalse((invoke("candidateList","b") as List<*>).contains("朋友"))
+        }.get(10,TimeUnit.SECONDS)
     }
 
 }

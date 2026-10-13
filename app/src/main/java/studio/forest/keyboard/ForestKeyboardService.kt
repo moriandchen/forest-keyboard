@@ -52,6 +52,23 @@ class ForestKeyboardService : InputMethodService() {
     private var scheduledRefresh: Runnable? = null
     private val prefs by lazy { getSharedPreferences("forest_learning", Context.MODE_PRIVATE) }
 
+    // Worker-owned index, restored once. Queries never scan all preferences.
+    private val learnedByRaw by lazy {
+        val out=mutableMapOf<String,MutableSet<String>>()
+        for((key,value) in prefs.all) {
+            if(value !is Int || value<=0 || !key.startsWith("freq|")) continue
+            val parts=key.split("|",limit=3)
+            if(parts.size==3 && compatible(parts[1],parts[2]))
+                out.getOrPut(parts[1]) { linkedSetOf() }.add(parts[2])
+        }
+        out
+    }
+
+    private fun compatible(raw:String,word:String):Boolean =
+        raw.isNotBlank() && wordPinyin[word].orEmpty().any {
+            it.startsWith(raw) || raw.startsWith(it)
+        }
+
     private val pinyin by lazy { loadDictionary() }
     // Built once after the dictionary is loaded. Previously segment() rebuilt and
     // sorted this list on every key press, which became expensive with V0.8.
@@ -126,7 +143,7 @@ class ForestKeyboardService : InputMethodService() {
             // Warm up off the UI thread, including SharedPreferences disk loading.
             pinyin.size; compactDictionary.size; wordPinyin.size
             syllablesByInitial.size; syllablePrefixes.size; prefixIndex.size
-            prefs.all
+            learnedByRaw.size
         }
     }
 
@@ -425,7 +442,7 @@ class ForestKeyboardService : InputMethodService() {
 
     private fun candidateList(raw:String):List<String>{
         // Keep ranking dynamic so personal learning takes effect immediately.
-        candidateCache[raw]?.let { return rank(raw,it) }
+        candidateCache[raw]?.let { return personalize(raw,it) }
         val base = pinyin[raw] ?: run {
             // Cache dictionary order only; personal ranking stays dynamic.
             val exact=compactDictionary[raw].orEmpty()
@@ -436,7 +453,17 @@ class ForestKeyboardService : InputMethodService() {
         }
         if(Thread.currentThread().isInterrupted) throw InterruptedException()
         candidateCache[raw]=base
-        return rank(raw,base)
+        return personalize(raw,base)
+    }
+
+    private fun personalize(raw:String,base:List<String>):List<String> {
+        val head=if(raw.isBlank()) null else
+            syllablesByInitial[raw.first()].orEmpty().firstOrNull { raw.startsWith(it) }
+        val learned=learnedByRaw[raw].orEmpty() + head?.let { learnedByRaw[it] }.orEmpty()
+        val valid=learned.filter { compatible(raw,it) }
+        // Merge before limiting so words chosen in the expanded panel can return
+        // to the ordinary row even if absent from its cached dictionary bucket.
+        return rank(raw,(base + valid).distinct()).take(24)
     }
 
     private fun leadingCandidates(raw:String):List<String> {
@@ -532,6 +559,7 @@ class ForestKeyboardService : InputMethodService() {
             connection.endBatchEdit()
         }
         learn(raw.take(consumed),word)
+        if(consumed<raw.length) learn(raw,word)
         candidatesExpanded=false
         refreshCandidates()
     }
@@ -540,6 +568,9 @@ class ForestKeyboardService : InputMethodService() {
         if(raw.isBlank() || word==raw)return
         val key="freq|" + raw + "|" + word
         prefs.edit().putInt(key,prefs.getInt(key,0)+1).apply()
+        candidateWorker.submit {
+            if(compatible(raw,word)) learnedByRaw.getOrPut(raw) { linkedSetOf() }.add(word)
+        }
     }
 
     private fun rank(raw:String, words:List<String>):List<String>{
