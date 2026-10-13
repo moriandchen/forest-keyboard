@@ -255,6 +255,12 @@ class ForestKeyboardServiceTest {
         }
     }
 
+    @Test fun multiSyllableInitialsFindPhraseCandidate() {
+        val words=invoke("candidateList","jd") as List<*>
+        assertEquals("覺得",words.first())
+        assertTrue((invoke("expandedCandidateList","jd") as List<*>).contains("覺得"))
+    }
+
     @Test fun idleShortcutsActuallyInsertPunctuation() {
         val row=field("candidateRow") as LinearLayout
         assertEquals("「」",(row.getChildAt(0) as TextView).text.toString())

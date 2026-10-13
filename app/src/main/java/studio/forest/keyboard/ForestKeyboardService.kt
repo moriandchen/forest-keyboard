@@ -123,6 +123,22 @@ class ForestKeyboardService : InputMethodService() {
         }
         out.mapValues { it.value.toList() }
     }
+    // Multi-syllable initials (e.g. "jd" -> 覺得), built once with the
+    // dictionary so abbreviation queries never scan all entries while typing.
+    private val initialsIndex by lazy {
+        val out=linkedMapOf<String,MutableList<String>>()
+        for((py,words) in pinyin){
+            val parts=py.split(' ').filter { it.isNotBlank() }
+            if(parts.size<2) continue
+            val initials=parts.joinToString("") { it.first().toString() }
+            val bucket=out.getOrPut(initials){ mutableListOf() }
+            for(word in words){
+                if(bucket.size>=96) break
+                if(word !in bucket) bucket.add(word)
+            }
+        }
+        out.mapValues { it.value.toList() }
+    }
 
     private fun loadDictionary():Map<String,List<String>>{
         val out=linkedMapOf<String,MutableList<String>>()
@@ -145,7 +161,7 @@ class ForestKeyboardService : InputMethodService() {
         candidateWorker.submit {
             // Warm up off the UI thread, including SharedPreferences disk loading.
             pinyin.size; compactDictionary.size; wordPinyin.size
-            syllablesByInitial.size; syllablePrefixes.size; prefixIndex.size
+            syllablesByInitial.size; syllablePrefixes.size; prefixIndex.size; initialsIndex.size
             learnedByRaw.size
         }
     }
@@ -468,9 +484,10 @@ class ForestKeyboardService : InputMethodService() {
         val base = pinyin[raw] ?: run {
             // Cache dictionary order only; personal ranking stays dynamic.
             val exact=compactDictionary[raw].orEmpty()
+            val abbreviated=if(raw.length>=2) initialsIndex[raw].orEmpty() else emptyList()
             val predicted=prefixCandidates(raw)
             val leading=leadingCandidates(raw)
-            (exact + predicted.take(6) + leading.take(8) + predicted)
+            (exact + abbreviated + predicted.take(6) + leading.take(8) + predicted)
                 .distinct().take(24).ifEmpty { listOf(raw) }
         }
         if(Thread.currentThread().isInterrupted) throw InterruptedException()
@@ -529,6 +546,7 @@ class ForestKeyboardService : InputMethodService() {
         val out=candidateList(raw).toMutableList()
         out.addAll(leadingCandidates(raw))
         out.addAll(compactDictionary[raw].orEmpty())
+        out.addAll(initialsIndex[raw].orEmpty())
         out.addAll(prefixIndex[raw].orEmpty())
         pinyin[raw]?.let { out.addAll(rank(raw,it)) }
         // Offer actual dictionary entries, not Cartesian products of homophones.

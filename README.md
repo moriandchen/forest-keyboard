@@ -2,6 +2,12 @@
 
 原生 Android 系統輸入法，繁體拼音優先。測試機：Huawei nova 5T。
 
+## V0.9.10 · 拼音首字母候選
+
+- 支援多音節拼音首字母查詢，例如 `jd` 可直接找到「覺得」。
+- 首字母候選索引在背景預建，按鍵查詢使用索引，不逐鍵掃描整本詞庫。
+- 完整拼音及既有前綴候選維持原排序路徑。
+
 ## V0.9.9 · 日常短語候選
 
 - 補入依真實使用情境整理的繁體詞組：生日快樂、我覺得、手感還是不夠、這次好了很多、又下雨了、很好睡覺、繼續優化等。
@@ -73,7 +79,7 @@
 
 GitHub Actions 執行 `gradle :app:testDebugUnitTest` 與 `gradle :app:assembleDebug`。
 Robolectric 回歸測試涵蓋 composing、快速查詢、過期候選、前綴與展開一致性。
-Artifact：`Forest-Keyboard-V0.9.9-debug`。
+Artifact：`Forest-Keyboard-V0.9.10-debug`。
 
 真機重點：快速輸入／退格、橫向及展開選字、空格選字、中文／英文標點、切 App。
 本版仍待真機 QA，不代表手感已驗收。
