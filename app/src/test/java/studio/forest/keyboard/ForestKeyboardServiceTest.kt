@@ -1,7 +1,9 @@
 package studio.forest.keyboard
 
 import android.os.Looper
+import android.text.InputType
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.BaseInputConnection
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -319,5 +321,65 @@ class ForestKeyboardServiceTest {
             assertEquals(query,word,(invoke("candidateList",query) as List<*>).first())
         }
     }
+
+    @Test fun autoLearningSettingStopsFrequencyWrites() {
+        service.getSharedPreferences(KeyboardPreferences.FILE,0).edit()
+            .putBoolean(KeyboardPreferences.AUTO_LEARNING,false).commit()
+        invoke("learn","jd","覺得")
+        assertFalse(service.getSharedPreferences(KeyboardPreferences.FILE,0)
+            .contains("freq|jd|覺得"))
+    }
+
+    @Test fun noPersonalizedLearningFlagPreventsFrequencyWrites() {
+        val info=EditorInfo().apply {
+            inputType=InputType.TYPE_CLASS_TEXT
+            imeOptions=EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+        }
+        service.onStartInput(info,false)
+        invoke("learn","jd","覺得")
+        assertFalse(service.getSharedPreferences(KeyboardPreferences.FILE,0)
+            .contains("freq|jd|覺得"))
+    }
+
+    @Test fun passwordFieldHidesCandidatesAndCommitsLettersDirectly() {
+        val info=EditorInfo().apply {
+            inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+        service.onStartInput(info,false)
+        invoke("letter","a")
+        drain()
+        assertEquals("a",connection.editable.toString())
+        assertEquals("",field("composing"))
+        assertEquals(View.GONE,(field("candidateHost") as View).visibility)
+        invoke("learn","a","啊")
+        assertFalse(service.getSharedPreferences(KeyboardPreferences.FILE,0)
+            .contains("freq|a|啊"))
+    }
+
+    @Test fun clearLearningKeepsKeyboardSettings() {
+        val prefs=service.getSharedPreferences(KeyboardPreferences.FILE,0)
+        val oldRevision=prefs.getInt(KeyboardPreferences.LEARNING_REVISION,0)
+        prefs.edit().putInt("freq|wo|我",3)
+            .putBoolean(KeyboardPreferences.AUTO_LEARNING,false).commit()
+        assertEquals(1,KeyboardPreferences.clearLearningData(service))
+        assertFalse(prefs.contains("freq|wo|我"))
+        assertFalse(prefs.getBoolean(KeyboardPreferences.AUTO_LEARNING,true))
+        assertEquals(oldRevision+1,prefs.getInt(KeyboardPreferences.LEARNING_REVISION,0))
+    }
+
+    @Test fun numericCurrencyKeyUsesRinggitInsteadOfPlaceholder() {
+        invoke("renderNumeric")
+        val root=field("root") as LinearLayout
+        val labels=root.children().mapNotNull { child ->
+            if(child is LinearLayout) child.children().mapNotNull { (it as? Button)?.text?.toString() }
+            else emptyList()
+        }.flatten()
+        assertTrue(labels.contains("RM"))
+        assertFalse(labels.contains("更多"))
+    }
+
+    private fun View.children():List<View> = (0 until (this as? android.view.ViewGroup)?.childCount.orZero())
+        .mapNotNull { (this as? android.view.ViewGroup)?.getChildAt(it) }
+    private fun Int?.orZero()=this ?: 0
 
 }

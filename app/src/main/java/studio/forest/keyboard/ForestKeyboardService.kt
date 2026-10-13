@@ -36,6 +36,8 @@ class ForestKeyboardService : InputMethodService() {
     private data class CandidateTarget(val raw:String, val word:String)
     private var numeric=false
     private var english=false
+    private var passwordField=false
+    private var learningRestricted=false
     private var shift=false
     private var composing=""
     private var spaceStartX=0f
@@ -53,7 +55,18 @@ class ForestKeyboardService : InputMethodService() {
     private var candidateTouch = false
     private var deferredCandidates: (() -> Unit)? = null
     private var scheduledRefresh: Runnable? = null
-    private val prefs by lazy { getSharedPreferences("forest_learning", Context.MODE_PRIVATE) }
+    private val prefs by lazy { getSharedPreferences(KeyboardPreferences.FILE, Context.MODE_PRIVATE) }
+    private val prefsListener=android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if(key==KeyboardPreferences.LEARNING_REVISION) {
+            candidateWorker.submit {
+                learnedByRaw.clear()
+                candidateCache.clear()
+                mainHandler.post {
+                    if(::root.isInitialized && !passwordField && composing.isNotBlank()) refreshCandidates()
+                }
+            }
+        }
+    }
 
     // Worker-owned index, restored once. Queries never scan all preferences.
     private val learnedByRaw by lazy {
@@ -158,6 +171,7 @@ class ForestKeyboardService : InputMethodService() {
 
     override fun onCreate() {
         super.onCreate()
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener)
         candidateWorker.submit {
             // Warm up off the UI thread, including SharedPreferences disk loading.
             pinyin.size; compactDictionary.size; wordPinyin.size
@@ -183,8 +197,21 @@ class ForestKeyboardService : InputMethodService() {
 
     override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
         super.onStartInput(attribute,restarting)
+        val wasPassword=passwordField
+        val inputType=attribute?.inputType ?: 0
+        val inputClass=inputType and android.text.InputType.TYPE_MASK_CLASS
+        val variation=inputType and android.text.InputType.TYPE_MASK_VARIATION
+        passwordField=(inputClass==android.text.InputType.TYPE_CLASS_TEXT && variation in setOf(
+            android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD,
+            android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
+            android.text.InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD
+        )) || (inputClass==android.text.InputType.TYPE_CLASS_NUMBER &&
+            variation==android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD)
+        learningRestricted=passwordField || (attribute?.imeOptions?.and(EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING) ?: 0)!=0
+        if(passwordField) english=true else if(wasPassword) english=false
+        numeric=false
         resetCandidates()
-        if(::root.isInitialized && !numeric) refreshCandidates()
+        if(::root.isInitialized) render()
     }
 
     override fun onFinishInput() {
@@ -195,6 +222,7 @@ class ForestKeyboardService : InputMethodService() {
 
     override fun onDestroy() {
         resetCandidates()
+        prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
         candidateWorker.shutdownNow()
         super.onDestroy()
     }
@@ -233,8 +261,10 @@ class ForestKeyboardService : InputMethodService() {
         layoutParams=LinearLayout.LayoutParams(0,49.dp,weight).apply { setMargins(1.dp,2.dp,1.dp,2.dp) }
         setOnTouchListener { view,event ->
             if(event.actionMasked==MotionEvent.ACTION_DOWN) {
-                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                view.playSoundEffect(SoundEffectConstants.CLICK)
+                if(prefs.getBoolean(KeyboardPreferences.HAPTIC_FEEDBACK,true))
+                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                if(prefs.getBoolean(KeyboardPreferences.KEY_SOUND,true))
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
             }
             false
         }
@@ -254,13 +284,24 @@ class ForestKeyboardService : InputMethodService() {
         root.removeAllViews()
         if(numeric) renderNumeric() else {
             if(candidateHost.parent!=null) (candidateHost.parent as? LinearLayout)?.removeView(candidateHost)
+            candidateHost.visibility=if(passwordField) View.GONE else View.VISIBLE
             root.addView(candidateHost)
-            refreshCandidates()
+            if(!passwordField) refreshCandidates()
             renderLetterKeys()
         }
     }
 
     private fun refreshCandidates(){
+        if(passwordField) {
+            candidateRevision++
+            candidateJob?.cancel(true)
+            scheduledRefresh?.let { mainHandler.removeCallbacks(it) }
+            scheduledRefresh=null
+            displayedRaw=""
+            displayedWords=emptyList()
+            displayedConsumption=emptyMap()
+            return
+        }
         val revision=++candidateRevision
         val raw=composing
         val expanded=candidatesExpanded
@@ -471,7 +512,7 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun letter(s:String){
-        if(english){ commit(s); return }
+        if(english || passwordField){ commit(s); return }
         collapseCandidatePanel()
         composing += s.lowercase()
         currentInputConnection.setComposingText(composing,1)
@@ -605,7 +646,8 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun learn(raw:String, word:String){
-        if(raw.isBlank() || word==raw)return
+        if(raw.isBlank() || word==raw || learningRestricted ||
+            !prefs.getBoolean(KeyboardPreferences.AUTO_LEARNING,true)) return
         val key="freq|" + raw + "|" + word
         prefs.edit().putInt(key,prefs.getInt(key,0)+1).apply()
         candidateWorker.submit {
@@ -657,11 +699,11 @@ class ForestKeyboardService : InputMethodService() {
     }
 
     private fun renderNumeric(){
-        val left=arrayOf(arrayOf("#","£","&","-"),arrayOf("@","(",")","="),arrayOf("更多",":",";","%"),arrayOf("ABC","°","—","*"))
+        val left=arrayOf(arrayOf("#","RM","&","-"),arrayOf("@","(",")","="),arrayOf("+",":",";","%"),arrayOf("ABC","°","—","*"))
         val nums=arrayOf(arrayOf("1","2","3"),arrayOf("4","5","6"),arrayOf("7","8","9"),arrayOf(",","0","."))
         for(i in 0..3){
             val buttons=mutableListOf<Button>()
-            left[i].forEach { s->buttons+=key(s,if(s=="更多"||s=="ABC")1.25f else 1f){if(s=="ABC"){numeric=false;render()}else commit(s)} }
+            left[i].forEach { s->buttons+=key(s,if(s=="ABC")1.25f else 1f){if(s=="ABC"){numeric=false;render()}else commit(s)} }
             nums[i].forEach { buttons+=key(it,1.15f) }
             buttons+=when(i){0->key("?");1->key("!");2->key("⌫"){currentInputConnection.deleteSurroundingText(1,0)};else->key("↵"){commit("\n")}}
             root.addView(row(*buttons.toTypedArray()))
