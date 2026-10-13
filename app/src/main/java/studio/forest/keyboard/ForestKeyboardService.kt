@@ -183,8 +183,12 @@ class ForestKeyboardService : InputMethodService() {
     override fun onCreateInputView(): View {
         root=LinearLayout(this).apply {
             orientation=LinearLayout.VERTICAL
-            setPadding(5,4,5,5)
-            setBackgroundColor(Color.rgb(225,227,232))
+            setPadding(4.dp,4.dp,4.dp,5.dp)
+            background=GradientDrawable().apply {
+                cornerRadius=24.dp.toFloat()
+                setColor(Color.rgb(225,227,232))
+            }
+            clipToOutline=true
         }
         candidateHost=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
         renderedRaw=""
@@ -195,16 +199,16 @@ class ForestKeyboardService : InputMethodService() {
         text=label; textSize=18f; isAllCaps=false; minHeight=0; minimumHeight=0; setPadding(0,0,0,0)
         setTextColor(Color.rgb(25,25,28))
         background=GradientDrawable().apply {
-            cornerRadius=9.dp.toFloat()
+            cornerRadius=8.dp.toFloat()
             setColor(if(label in listOf("⇧","⌫","123","☺","↵")) Color.rgb(214,216,221) else Color.WHITE)
         }
         if(label.length==1 && label[0].isLetter()) {
             // Narrow the painted cap without reducing the button's touch target.
-            background=InsetDrawable(background,1.dp,0,1.dp,0)
+            background=InsetDrawable(background,2.dp,0,2.dp,0)
         }
         stateListAnimator=null
         elevation=0f
-        layoutParams=LinearLayout.LayoutParams(0,49.dp,weight).apply { setMargins(2,3,2,3) }
+        layoutParams=LinearLayout.LayoutParams(0,49.dp,weight).apply { setMargins(1.dp,2.dp,1.dp,2.dp) }
         setOnClickListener { action?.invoke() ?: commit(label) }
     }
 
@@ -292,7 +296,7 @@ class ForestKeyboardService : InputMethodService() {
             val bar=LinearLayout(this).apply {
                 orientation=LinearLayout.HORIZONTAL
                 gravity=Gravity.CENTER_VERTICAL
-                setBackgroundColor(Color.rgb(250,250,251))
+                setBackgroundColor(Color.rgb(225,227,232))
             }
             modeButton=Button(this).apply {
                 textSize=13f; isAllCaps=false; minHeight=0; minimumHeight=0
@@ -330,7 +334,7 @@ class ForestKeyboardService : InputMethodService() {
                 textSize=20f; gravity=Gravity.CENTER; setPadding(18.dp,0,18.dp,0)
                 minimumWidth=56.dp
                 layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,43.dp)
-                setTextColor(Color.rgb(38,38,42)); setBackgroundColor(Color.rgb(250,250,251))
+                setTextColor(Color.rgb(38,38,42)); setBackgroundColor(Color.rgb(225,227,232))
                 setSingleLine(true)
                 trackCandidateTouch(this)
                 setOnClickListener {
@@ -363,7 +367,7 @@ class ForestKeyboardService : InputMethodService() {
             val grid=GridLayout(this).apply {
                 columnCount=4
                 setPadding(8.dp,4.dp,8.dp,8.dp)
-                setBackgroundColor(Color.rgb(250,250,251))
+                setBackgroundColor(Color.rgb(225,227,232))
             }
             all.forEach { word ->
                 grid.addView(TextView(this).apply {
@@ -406,7 +410,7 @@ class ForestKeyboardService : InputMethodService() {
         val marks=if(english) listOf(",",".","?","!") else listOf("，","。","？","！")
         root.addView(row(*marks.map { mark ->
             key(mark){ punct(mark) }.apply {
-                layoutParams=LinearLayout.LayoutParams(0,34.dp,1f).apply { setMargins(2,2,2,2) }
+                layoutParams=LinearLayout.LayoutParams(0,34.dp,1f).apply { setMargins(1.dp,1.dp,1.dp,1.dp) }
                 textSize=20f
             }
         }.toTypedArray()))
@@ -415,9 +419,9 @@ class ForestKeyboardService : InputMethodService() {
         }.toTypedArray()))
         root.addView(LinearLayout(this).apply {
             orientation=LinearLayout.HORIZONTAL
-            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(18.dp,1))
+            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(22.dp,1))
             "asdfghjkl".forEach { c -> val label=if(shift)c.uppercase() else c.toString(); addView(key(label){letter(label)}) }
-            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(14.dp,1))
+            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(18.dp,1))
         })
         root.addView(row(
             key("⇧",1.35f){shift=!shift;render()},

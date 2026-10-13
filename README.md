@@ -2,7 +2,13 @@
 
 原生 Android 系統輸入法，繁體拼音優先。測試機：Huawei nova 5T。
 
-## V0.9.5 · 個人候選召回
+## V0.9.6 · 輕盈鍵距
+
+- QWERTY 鍵帽視覺間距加大，透過縮窄繪製鍵帽保留原按鈕觸控區。
+- 修正鍵盤邊距、鍵帽間距使用 dp，讓不同密度螢幕上的排列更一致。
+- 鍵盤底板改為 iPhone 風格灰底與圓角；維持 49dp 高度和常用標點列。
+
+### 保留 V0.9.5 個人候選召回
 
 - 從展開面板選過的詞會加入個人索引，下次輸入相同拼音可回到普通候選列。
 - 分段選字同時記錄當時完整拼音及已消耗前綴；完整詞仍優先。
@@ -48,7 +54,7 @@
 
 GitHub Actions 執行 `gradle :app:testDebugUnitTest` 與 `gradle :app:assembleDebug`。
 Robolectric 回歸測試涵蓋 composing、快速查詢、過期候選、前綴與展開一致性。
-Artifact：`Forest-Keyboard-V0.9.5-debug`。
+Artifact：`Forest-Keyboard-V0.9.6-debug`。
 
 真機重點：快速輸入／退格、橫向及展開選字、空格選字、中文／英文標點、切 App。
 本版仍待真機 QA，不代表手感已驗收。
