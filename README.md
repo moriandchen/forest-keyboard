@@ -2,7 +2,13 @@
 
 原生 Android 系統輸入法，繁體拼音優先。測試機：Huawei nova 5T。
 
-## V0.9.6 · 輕盈鍵距
+## V0.9.7 · 按鍵回饋
+
+- 點字母、標點和功能鍵時使用 Android 系統鍵盤輕觸回饋，尊重裝置的觸覺設定。
+- 按住鍵帽會即時變深，放開恢復；不加延遲動畫，保留快速連打反應。
+- 保留 V0.9.6 的鍵距、49dp 鍵高、拼音候選和標點列。
+
+### 保留 V0.9.6 輕盈鍵距
 
 - QWERTY 鍵帽視覺間距加大，透過縮窄繪製鍵帽保留原按鈕觸控區。
 - 修正鍵盤邊距、鍵帽間距使用 dp，讓不同密度螢幕上的排列更一致。
@@ -54,7 +60,7 @@
 
 GitHub Actions 執行 `gradle :app:testDebugUnitTest` 與 `gradle :app:assembleDebug`。
 Robolectric 回歸測試涵蓋 composing、快速查詢、過期候選、前綴與展開一致性。
-Artifact：`Forest-Keyboard-V0.9.6-debug`。
+Artifact：`Forest-Keyboard-V0.9.7-debug`。
 
 真機重點：快速輸入／退格、橫向及展開選字、空格選字、中文／英文標點、切 App。
 本版仍待真機 QA，不代表手感已驗收。

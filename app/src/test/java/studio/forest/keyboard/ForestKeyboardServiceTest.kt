@@ -5,6 +5,7 @@ import android.view.View
 import android.view.inputmethod.BaseInputConnection
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Button
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -290,6 +291,15 @@ class ForestKeyboardServiceTest {
             assertFalse((invoke("candidateList","buzhidao") as List<*>).contains("不之到"))
             assertFalse((invoke("candidateList","b") as List<*>).contains("朋友"))
         }.get(10,TimeUnit.SECONDS)
+    }
+
+    @Test fun letterKeysExposePressedVisualState() {
+        val keyboard=field("root") as LinearLayout
+        val letters=keyboard.getChildAt(2) as LinearLayout
+        val q=letters.getChildAt(0) as Button
+        assertTrue(q.background.isStateful)
+        q.performClick()
+        assertEquals("q",field("composing"))
     }
 
 }

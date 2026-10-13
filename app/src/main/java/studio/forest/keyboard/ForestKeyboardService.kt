@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable
 import android.inputmethodservice.InputMethodService
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -15,6 +16,7 @@ import android.widget.GridLayout
 import android.widget.ScrollView
 import android.content.Context
 import android.graphics.drawable.InsetDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Handler
 import android.os.Looper
 import android.view.inputmethod.EditorInfo
@@ -198,9 +200,12 @@ class ForestKeyboardService : InputMethodService() {
     private fun key(label:String, weight:Float=1f, action:(()->Unit)?=null)=Button(this).apply {
         text=label; textSize=18f; isAllCaps=false; minHeight=0; minimumHeight=0; setPadding(0,0,0,0)
         setTextColor(Color.rgb(25,25,28))
-        background=GradientDrawable().apply {
-            cornerRadius=8.dp.toFloat()
-            setColor(if(label in listOf("⇧","⌫","123","☺","↵")) Color.rgb(214,216,221) else Color.WHITE)
+        val special=label in listOf("⇧","⌫","123","☺","↵")
+        val normalColor=if(special) Color.rgb(214,216,221) else Color.WHITE
+        background=StateListDrawable().apply {
+            addState(intArrayOf(android.R.attr.state_pressed),keyShape(
+                if(special) Color.rgb(191,194,202) else Color.rgb(215,218,224)))
+            addState(intArrayOf(),keyShape(normalColor))
         }
         if(label.length==1 && label[0].isLetter()) {
             // Narrow the painted cap without reducing the button's touch target.
@@ -209,7 +214,15 @@ class ForestKeyboardService : InputMethodService() {
         stateListAnimator=null
         elevation=0f
         layoutParams=LinearLayout.LayoutParams(0,49.dp,weight).apply { setMargins(1.dp,2.dp,1.dp,2.dp) }
-        setOnClickListener { action?.invoke() ?: commit(label) }
+        setOnClickListener {
+            performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            action?.invoke() ?: commit(label)
+        }
+    }
+
+    private fun keyShape(color:Int)=GradientDrawable().apply {
+        cornerRadius=8.dp.toFloat()
+        setColor(color)
     }
 
     private fun row(vararg keys:Button)=LinearLayout(this).apply {
