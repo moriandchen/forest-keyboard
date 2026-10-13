@@ -6,6 +6,7 @@ import android.inputmethodservice.InputMethodService
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.HapticFeedbackConstants
+import android.view.SoundEffectConstants
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -204,7 +205,7 @@ class ForestKeyboardService : InputMethodService() {
         val normalColor=if(special) Color.rgb(214,216,221) else Color.WHITE
         background=StateListDrawable().apply {
             addState(intArrayOf(android.R.attr.state_pressed),keyShape(
-                if(special) Color.rgb(191,194,202) else Color.rgb(215,218,224)))
+                if(special) Color.rgb(177,181,190) else Color.rgb(202,207,216)))
             addState(intArrayOf(),keyShape(normalColor))
         }
         if(label.length==1 && label[0].isLetter()) {
@@ -214,10 +215,14 @@ class ForestKeyboardService : InputMethodService() {
         stateListAnimator=null
         elevation=0f
         layoutParams=LinearLayout.LayoutParams(0,49.dp,weight).apply { setMargins(1.dp,2.dp,1.dp,2.dp) }
-        setOnClickListener {
-            performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            action?.invoke() ?: commit(label)
+        setOnTouchListener { view,event ->
+            if(event.actionMasked==MotionEvent.ACTION_DOWN) {
+                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                view.playSoundEffect(SoundEffectConstants.CLICK)
+            }
+            false
         }
+        setOnClickListener { action?.invoke() ?: commit(label) }
     }
 
     private fun keyShape(color:Int)=GradientDrawable().apply {

@@ -2,7 +2,14 @@
 
 原生 Android 系統輸入法，繁體拼音優先。測試機：Huawei nova 5T。
 
-## V0.9.7 · 按鍵回饋
+## V0.9.8 · 即時打字觸感
+
+- 觸覺與按鍵聲在手指按下時立即觸發，輸入動作不必等到放開。
+- 加深按壓時的鍵帽色差，讓快速連點也看得到觸控回應。
+- 使用 Android 系統按鍵聲與虛擬鍵觸覺回饋，跟隨裝置音效及觸覺設定。
+- 保留 V0.9.6 的鍵距、49dp 鍵高、拼音候選和標點列。
+
+### 保留 V0.9.7 按鍵回饋
 
 - 點字母、標點和功能鍵時使用 Android 系統鍵盤輕觸回饋，尊重裝置的觸覺設定。
 - 按住鍵帽會即時變深，放開恢復；不加延遲動畫，保留快速連打反應。
@@ -60,7 +67,7 @@
 
 GitHub Actions 執行 `gradle :app:testDebugUnitTest` 與 `gradle :app:assembleDebug`。
 Robolectric 回歸測試涵蓋 composing、快速查詢、過期候選、前綴與展開一致性。
-Artifact：`Forest-Keyboard-V0.9.7-debug`。
+Artifact：`Forest-Keyboard-V0.9.8-debug`。
 
 真機重點：快速輸入／退格、橫向及展開選字、空格選字、中文／英文標點、切 App。
 本版仍待真機 QA，不代表手感已驗收。
