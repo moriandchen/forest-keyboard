@@ -8,8 +8,16 @@ android {
         applicationId = "studio.forest.keyboard"
         minSdk = 26
         targetSdk = 35
-        versionCode = 21
-        versionName = "0.9.12"
+        versionCode = 22
+        versionName = "0.9.13"
+        manifestPlaceholders["appLabel"] = "Forest Keyboard"
+    }
+
+    buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".preview"
+            manifestPlaceholders["appLabel"] = "Forest Keyboard 試用"
+        }
     }
 
     compileOptions {
@@ -28,3 +36,4 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.14.1")
 }
+
