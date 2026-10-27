@@ -10,6 +10,14 @@ android {
         targetSdk = 35
         versionCode = 22
         versionName = "0.9.13"
+        manifestPlaceholders["appLabel"] = "Forest Keyboard"
+    }
+
+    buildTypes {
+        getByName("debug") {
+            applicationIdSuffix = ".preview"
+            manifestPlaceholders["appLabel"] = "Forest Keyboard 試用"
+        }
     }
 
     compileOptions {
