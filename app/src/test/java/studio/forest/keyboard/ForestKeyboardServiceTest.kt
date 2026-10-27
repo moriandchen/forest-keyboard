@@ -303,11 +303,56 @@ class ForestKeyboardServiceTest {
 
     @Test fun letterKeysExposePressedVisualState() {
         val keyboard=field("root") as LinearLayout
-        val letters=keyboard.getChildAt(2) as LinearLayout
+        val letters=keyboard.getChildAt(1) as LinearLayout
         val q=letters.getChildAt(0) as Button
         assertTrue(q.background.isStateful)
         q.performClick()
         assertEquals("q",field("composing"))
+    }
+
+    private fun spaceKey():Button {
+        val root=field("root") as LinearLayout
+        return (root.getChildAt(root.childCount-1) as LinearLayout).getChildAt(2) as Button
+    }
+
+    private fun touch(button:Button, action:Int, x:Float) {
+        val event=android.view.MotionEvent.obtain(0,10,action,x,10f,0)
+        button.dispatchTouchEvent(event)
+        event.recycle()
+    }
+
+    @Test fun spaceDragReturningToOriginDoesNotInsertSpace() {
+        val space=spaceKey()
+        touch(space,android.view.MotionEvent.ACTION_DOWN,0f)
+        assertTrue(space.isPressed)
+        touch(space,android.view.MotionEvent.ACTION_MOVE,100f)
+        touch(space,android.view.MotionEvent.ACTION_MOVE,0f)
+        touch(space,android.view.MotionEvent.ACTION_UP,0f)
+        assertEquals("",connection.editable.toString())
+        assertFalse(space.isPressed)
+    }
+
+    @Test fun cancelledSpaceDoesNotCommitAndNextTapStillWorks() {
+        val space=spaceKey()
+        touch(space,android.view.MotionEvent.ACTION_DOWN,0f)
+        touch(space,android.view.MotionEvent.ACTION_CANCEL,0f)
+        assertFalse(space.isPressed)
+        assertEquals("",connection.editable.toString())
+        touch(space,android.view.MotionEvent.ACTION_DOWN,0f)
+        touch(space,android.view.MotionEvent.ACTION_UP,0f)
+        assertEquals(" ",connection.editable.toString())
+    }
+
+    @Test fun heightAndPunctuationSettingsChangeLayout() {
+        val root=field("root") as LinearLayout
+        assertEquals(5,root.childCount)
+        service.getSharedPreferences(KeyboardPreferences.FILE,0).edit()
+            .putInt(KeyboardPreferences.KEY_HEIGHT,62)
+            .putBoolean(KeyboardPreferences.PUNCTUATION_ROW,true).commit()
+        drain()
+        assertEquals(6,root.childCount)
+        val q=(root.getChildAt(2) as LinearLayout).getChildAt(0)
+        assertEquals((62*service.resources.displayMetrics.density).toInt(),q.layoutParams.height)
     }
 
     @Test fun practicalDailyPhrasesReachTheCandidateRow() {
@@ -406,3 +451,4 @@ class ForestKeyboardServiceTest {
     private fun Int?.orZero()=this ?: 0
 
 }
+

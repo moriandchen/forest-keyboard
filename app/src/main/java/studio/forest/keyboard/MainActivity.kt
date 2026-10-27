@@ -32,7 +32,7 @@ class MainActivity : Activity() {
             setTextColor(0xFF202124.toInt())
         })
         content.addView(TextView(this).apply {
-            text="V0.9.12 · 個人詞庫與輸入設定"
+            text="V0.9.13 · 個人詞庫與輸入設定"
             textSize=14f
             setTextColor(0xFF606168.toInt())
             setPadding(0,4.dp,0,18.dp)
@@ -45,6 +45,26 @@ class MainActivity : Activity() {
             text="選擇 Forest Keyboard"
             setOnClickListener { (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker() }
         })
+        content.addView(sectionTitle("鍵盤布局"))
+        val heightLabel=TextView(this).apply { textSize=16f }
+        fun updateHeightLabel(value:Int) { heightLabel.text="按鍵高度：${value}（標準 54）" }
+        updateHeightLabel(prefs.getInt(KeyboardPreferences.KEY_HEIGHT,54).coerceIn(44,62))
+        content.addView(heightLabel)
+        content.addView(android.widget.SeekBar(this).apply {
+            max=18
+            progress=prefs.getInt(KeyboardPreferences.KEY_HEIGHT,54).coerceIn(44,62)-44
+            setOnSeekBarChangeListener(object:android.widget.SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(bar:android.widget.SeekBar?,value:Int,fromUser:Boolean) {
+                    updateHeightLabel(value+44)
+                }
+                override fun onStartTrackingTouch(bar:android.widget.SeekBar?) {}
+                override fun onStopTrackingTouch(bar:android.widget.SeekBar?) {
+                    prefs.edit().putInt(KeyboardPreferences.KEY_HEIGHT,(bar?.progress?:10)+44).apply()
+                }
+            })
+        })
+        content.addView(settingSwitch("標點快捷列",KeyboardPreferences.PUNCTUATION_ROW,false,
+            "開啟後在字母上方顯示標點；關閉時可從 123 輸入標點"))
         content.addView(sectionTitle("輸入偏好"))
         content.addView(settingSwitch("自動學習常用詞",KeyboardPreferences.AUTO_LEARNING,true,
             "只在一般文字欄位記錄你選過的詞"))
@@ -197,3 +217,4 @@ class MainActivity : Activity() {
 
     private val Int.dp:Int get()=(this*resources.displayMetrics.density).toInt()
 }
+

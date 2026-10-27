@@ -1,6 +1,7 @@
 name: Build Forest Keyboard APK
 
 on:
+  pull_request:
   workflow_dispatch:
   push:
     branches: [ main ]
@@ -32,6 +33,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Forest-Keyboard-V0.9.12-debug
+          name: Forest-Keyboard-V0.9.13-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+

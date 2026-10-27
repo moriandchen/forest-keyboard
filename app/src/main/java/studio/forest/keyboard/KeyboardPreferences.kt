@@ -3,6 +3,9 @@ package studio.forest.keyboard
 import android.content.Context
 
 internal object KeyboardPreferences {
+    const val KEY_HEIGHT = "setting_key_height"
+    const val PUNCTUATION_ROW = "setting_punctuation_row"
+    const val DEFAULT_KEY_HEIGHT = 54
     const val FILE = "forest_learning"
     const val AUTO_LEARNING = "setting_auto_learning"
     const val HAPTIC_FEEDBACK = "setting_haptic_feedback"
@@ -46,3 +49,4 @@ internal object KeyboardPreferences {
         return frequencyKeys.size
     }
 }
+

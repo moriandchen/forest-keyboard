@@ -42,6 +42,7 @@ class ForestKeyboardService : InputMethodService() {
     private var composing=""
     private var spaceStartX=0f
     private var lastCursorStep=0
+    private var spaceDragged=false
     private var candidatesExpanded=false
     private val mainHandler = Handler(Looper.getMainLooper())
     // All dictionary caches are confined to this single worker.
@@ -57,6 +58,9 @@ class ForestKeyboardService : InputMethodService() {
     private var scheduledRefresh: Runnable? = null
     private val prefs by lazy { getSharedPreferences(KeyboardPreferences.FILE, Context.MODE_PRIVATE) }
     private val prefsListener=android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if(key==KeyboardPreferences.KEY_HEIGHT || key==KeyboardPreferences.PUNCTUATION_ROW) {
+            if(::root.isInitialized) render()
+        }
         if(key==KeyboardPreferences.LEARNING_REVISION) {
             candidateWorker.submit {
                 learnedByRaw.clear()
@@ -257,7 +261,7 @@ class ForestKeyboardService : InputMethodService() {
     override fun onCreateInputView(): View {
         root=LinearLayout(this).apply {
             orientation=LinearLayout.VERTICAL
-            setPadding(4.dp,4.dp,4.dp,5.dp)
+            setPadding(3.dp,4.dp,3.dp,12.dp)
             background=GradientDrawable().apply {
                 cornerRadius=24.dp.toFloat()
                 setColor(Color.rgb(225,227,232))
@@ -279,23 +283,28 @@ class ForestKeyboardService : InputMethodService() {
                 if(special) Color.rgb(177,181,190) else Color.rgb(202,207,216)))
             addState(intArrayOf(),keyShape(normalColor))
         }
-        if(label.length==1 && label[0].isLetter()) {
-            // Narrow the painted cap without reducing the button's touch target.
-            background=InsetDrawable(background,2.dp,0,2.dp,0)
-        }
+        // Paint gaps inside the full touch cell, avoiding dead strips between keys.
+        background=InsetDrawable(background,3.dp,5.dp,3.dp,5.dp)
+        isSoundEffectsEnabled=false // Feedback is emitted once, on press, rather than again on click.
         stateListAnimator=null
         elevation=0f
-        layoutParams=LinearLayout.LayoutParams(0,49.dp,weight).apply { setMargins(1.dp,2.dp,1.dp,2.dp) }
+        layoutParams=LinearLayout.LayoutParams(0,
+            prefs.getInt(KeyboardPreferences.KEY_HEIGHT,KeyboardPreferences.DEFAULT_KEY_HEIGHT).coerceIn(44,62).dp,weight)
         setOnTouchListener { view,event ->
-            if(event.actionMasked==MotionEvent.ACTION_DOWN) {
-                if(prefs.getBoolean(KeyboardPreferences.HAPTIC_FEEDBACK,true))
-                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                if(prefs.getBoolean(KeyboardPreferences.KEY_SOUND,true))
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
-            }
+            if(event.actionMasked==MotionEvent.ACTION_DOWN) pressFeedback(view)
             false
         }
         setOnClickListener { action?.invoke() ?: commit(label) }
+    }
+
+    private fun pressFeedback(view:View) {
+        if(prefs.getBoolean(KeyboardPreferences.HAPTIC_FEEDBACK,true))
+            view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        if(prefs.getBoolean(KeyboardPreferences.KEY_SOUND,true)) {
+            view.isSoundEffectsEnabled=true
+            view.playSoundEffect(SoundEffectConstants.CLICK)
+            view.isSoundEffectsEnabled=false
+        }
     }
 
     private fun keyShape(color:Int)=GradientDrawable().apply {
@@ -510,7 +519,7 @@ class ForestKeyboardService : InputMethodService() {
     private fun renderLetterKeys(){
         // Persistent punctuation row: available even while composing.
         val marks=if(english) listOf(",",".","?","!") else listOf("，","。","？","！")
-        root.addView(row(*marks.map { mark ->
+        if(prefs.getBoolean(KeyboardPreferences.PUNCTUATION_ROW,false)) root.addView(row(*marks.map { mark ->
             key(mark){ punct(mark) }.apply {
                 layoutParams=LinearLayout.LayoutParams(0,34.dp,1f).apply { setMargins(1.dp,1.dp,1.dp,1.dp) }
                 textSize=20f
@@ -521,9 +530,9 @@ class ForestKeyboardService : InputMethodService() {
         }.toTypedArray()))
         root.addView(LinearLayout(this).apply {
             orientation=LinearLayout.HORIZONTAL
-            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(22.dp,1))
+            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(0,1,0.5f))
             "asdfghjkl".forEach { c -> val label=if(shift)c.uppercase() else c.toString(); addView(key(label){letter(label)}) }
-            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(18.dp,1))
+            addView(View(this@ForestKeyboardService), LinearLayout.LayoutParams(0,1,0.5f))
         })
         root.addView(row(
             key("⇧",1.35f){shift=!shift;render()},
@@ -531,10 +540,10 @@ class ForestKeyboardService : InputMethodService() {
             key("⌫",1.35f){backspace()}
         ))
         root.addView(row(
-            key("123",1.15f){flushRaw();numeric=true;render()},
-            key("☺",0.95f){flushRaw();commit("☺")},
-            key(if(english)"English" else "拼音",4.65f).also(::setupSpace),
-            key("↵",1.35f){flushRaw();commit("\n")}
+            key("123",1.2f){flushRaw();numeric=true;render()},
+            key("☺",1.2f){flushRaw();commit("☺")},
+            key(if(english)"English" else "拼音",5.2f).also(::setupSpace),
+            key("↵",2.4f){flushRaw();commit("\n")}
         ))
     }
 
@@ -757,8 +766,9 @@ class ForestKeyboardService : InputMethodService() {
     private fun setupSpace(v:Button){
         v.setOnTouchListener { _,e->
             when(e.action){
-                MotionEvent.ACTION_DOWN->{spaceStartX=e.x;lastCursorStep=0;true}
+                MotionEvent.ACTION_DOWN->{spaceStartX=e.x;lastCursorStep=0;spaceDragged=false;v.isPressed=true;pressFeedback(v);true}
                 MotionEvent.ACTION_MOVE->{
+                    if(abs(e.x-spaceStartX)>=12.dp) spaceDragged=true
                     val step=((e.x-spaceStartX)/24.dp).toInt(); val diff=step-lastCursorStep
                     if(diff!=0){
                         if(composing.isNotEmpty()) { flushRaw(); refreshCandidates() }
@@ -766,7 +776,8 @@ class ForestKeyboardService : InputMethodService() {
                     true
                 }
                 MotionEvent.ACTION_UP->{
-                    if(abs(e.x-spaceStartX)<12.dp){
+                    v.isPressed=false
+                    if(!spaceDragged && abs(e.x-spaceStartX)<12.dp){
                         if(composing.isNotEmpty()){
                             if(displayedRaw==composing && displayedWords.isNotEmpty()) {
                                 choose(displayedWords.first())
@@ -778,6 +789,7 @@ class ForestKeyboardService : InputMethodService() {
                     }
                     true
                 }
+                MotionEvent.ACTION_CANCEL->{v.isPressed=false;spaceDragged=false;lastCursorStep=0;true}
                 else->false
             }
         }
@@ -787,3 +799,4 @@ class ForestKeyboardService : InputMethodService() {
     private fun commit(s:String)=currentInputConnection.commitText(s,1)
     private val Int.dp:Int get()=(this*resources.displayMetrics.density).toInt()
 }
+

@@ -1,3 +1,17 @@
+# Forest Keyboard 0.9.13 — iPhone layout tuning
+
+- Adjustable key height (44–62, default 54) in settings.
+- Four-row letter layout by default; punctuation shortcut row can be enabled in settings.
+- Symmetric half-key second-row offsets and wider return key.
+- Visual key gaps sit inside full touch cells.
+- Space key now has press feedback and cancellation handling; dragging back to the origin does not insert an accidental space.
+- Existing input/candidate regression suite plus space-gesture and layout checks run in GitHub Actions.
+- Real-device typing feel still requires testing on Huawei nova 5T.
+
+Dictionary inspection found no exact duplicate candidates within entries. No dictionary words were removed.
+
+---
+
 # 🌲 Forest Keyboard
 
 原生 Android 系統輸入法，繁體拼音優先。測試機：Huawei nova 5T。
@@ -98,3 +112,4 @@ Artifact：`Forest-Keyboard-V0.9.12-debug`。
 
 真機重點：快速輸入／退格、橫向及展開選字、空格選字、中文／英文標點、切 App。
 本版仍待真機 QA，不代表手感已驗收。
+
